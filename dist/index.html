@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rennrad-Basislager Europa</title>
+  <style>
+    :root {
+      --ink: #16212e; --muted: #5d6e7e; --line: #e4eaf0; --bg: #f5f8fb;
+      --card: #ffffff; --nav: #122230; --nav-ink: #cfe0ec; --accent: #e8590c;
+      --accent2: #1f7a8c;
+      --prof-easy: #1f9d8f; --prof-mid: #e8990c; --prof-hard: #e0431f;
+      --shadow: 0 1px 3px rgba(20,40,60,.07), 0 8px 28px rgba(20,40,60,.06);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+    }
+    /* ---- Navbar ---- */
+    header.nav {
+      position: sticky; top: 0; z-index: 50; background: var(--nav);
+      box-shadow: 0 2px 14px rgba(0,0,0,.18);
+    }
+    .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; }
+    .brand .mark { font-size: 20px; }
+    .brand h1 { font-size: 16px; margin: 0; color: #fff; font-weight: 700; letter-spacing: .2px; }
+    .brand span { color: #7fa3bd; font-size: 12.5px; margin-left: 2px; }
+    .tabs {
+      display: flex; gap: 4px; overflow-x: auto; padding-bottom: 10px;
+      scrollbar-width: thin;
+    }
+    .tabs::-webkit-scrollbar { height: 6px; }
+    .tabs::-webkit-scrollbar-thumb { background: #2c4256; border-radius: 6px; }
+    .navbtn {
+      flex: 0 0 auto; background: transparent; color: var(--nav-ink);
+      border: 1px solid #2a3f52; border-radius: 999px; padding: 6px 13px;
+      font-size: 13px; cursor: pointer; white-space: nowrap; transition: all .15s;
+    }
+    .navbtn:hover { background: #1c3043; color: #fff; }
+    .navbtn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .navbtn .rk { opacity: .65; font-variant-numeric: tabular-nums; margin-right: 5px; }
+    /* ---- Layout ---- */
+    main { max-width: 1080px; margin: 0 auto; padding: 26px 16px 60px; }
+    .loc-section { display: none; animation: fade .25s ease; }
+    .loc-section.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    /* ---- Hero ---- */
+    .hero {
+      border-radius: 16px; padding: 26px 26px 24px; color: #fff; position: relative;
+      overflow: hidden; box-shadow: var(--shadow);
+      background: linear-gradient(135deg, #163a4d 0%, #1f7a8c 55%, #2aa1a8 100%);
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -40px; bottom: -60px; width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);
+    }
+    .hero .rank-badge {
+      display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 600; margin-bottom: 12px;
+    }
+    .hero h2 { margin: 0 0 4px; font-size: 30px; letter-spacing: -.5px; }
+    .hero .region { font-size: 14px; opacity: .9; margin-bottom: 14px; }
+    .hero .tagline { font-size: 15px; max-width: 660px; opacity: .96; position: relative; z-index: 1; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; position: relative; z-index: 1; }
+    .chip {
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 10px; padding: 7px 12px; font-size: 12.5px;
+    }
+    .chip b { display: block; font-size: 11px; font-weight: 600; opacity: .8; margin-bottom: 1px; text-transform: uppercase; letter-spacing: .4px; }
+    /* ---- Climbs ---- */
+    .sec-title { font-size: 14px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 30px 2px 14px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 16px 16px 12px; box-shadow: var(--shadow);
+    }
+    .card h3 { margin: 0 0 2px; font-size: 16.5px; }
+    .card .note { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .stat { background: #f1f5f9; border-radius: 8px; padding: 6px 10px; font-size: 12.5px; line-height: 1.25; }
+    .stat b { display: block; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .stat span { color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: .4px; }
+    .stat.hard b, .bigpct.hard { color: var(--prof-hard); }
+    .stat.mid b, .bigpct.mid { color: var(--prof-mid); }
+    .stat.easy b, .bigpct.easy { color: var(--prof-easy); }
+    svg.profile { width: 100%; height: auto; display: block; }
+    svg.profile .grid { stroke: #eef2f6; stroke-width: 1; }
+    svg.profile .ax { fill: #93a3b2; font-size: 10.5px; font-family: inherit; }
+    svg.profile .bigpct { font-size: 15px; font-weight: 700; font-family: inherit; }
+    /* ---- Übersicht ---- */
+    .intro { font-size: 15.5px; color: #34495a; max-width: 720px; }
+    table.rank { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13.5px; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    table.rank th, table.rank td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+    table.rank th { background: #eef3f8; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    table.rank tr:last-child td { border-bottom: none; }
+    table.rank tr { cursor: pointer; transition: background .12s; }
+    table.rank tbody tr:hover { background: #f3f8fc; }
+    table.rank td.r { font-weight: 700; color: var(--accent); }
+    .barchart { margin-top: 26px; }
+    .metric-btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+    .mbtn { background: var(--card); border: 1px solid var(--line); color: #34495a; border-radius: 999px; padding: 6px 13px; font-size: 12.5px; cursor: pointer; transition: all .15s; }
+    .mbtn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .mbtn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .metric-hint { font-size: 12.5px; color: var(--muted); margin: 0 2px 14px; min-height: 16px; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 58px; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .bar-row .lbl { font-size: 13px; text-align: right; color: #34495a; }
+    .bar-track { background: #e8eef4; border-radius: 6px; height: 18px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1f7a8c, #e8590c); }
+    .bar-row .val { font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin-top: 24px; }
+    .callout { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+    .callout b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin-bottom: 4px; }
+    .callout span { font-size: 14px; color: #34495a; }
+    footer { max-width: 1080px; margin: 0 auto; padding: 0 16px 50px; color: var(--muted); font-size: 12.5px; }
+    footer hr { border: none; border-top: 1px solid var(--line); margin: 0 0 16px; }
+    @media (max-width: 560px) {
+      .hero h2 { font-size: 24px; }
+      .bar-row { grid-template-columns: 110px 1fr 50px; }
+      .bar-row .lbl { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="mark">🚵</span>
+        <h1>Rennrad-Basislager Europa <span>· von brutal-alpin bis insular-mild</span></h1>
+      </div>
+      <nav class="tabs" id="tabs">
+        <button class="navbtn active" id="nav-overview" onclick="showLoc('overview')">Übersicht</button>
+        <button class="navbtn" id="nav-bormio" onclick="showLoc('bormio')">
+            <span class="rk">1</span>Bormio
+          </button><button class="navbtn" id="nav-bourg" onclick="showLoc('bourg')">
+            <span class="rk">2</span>Bourg-d&#39;Oisans
+          </button><button class="navbtn" id="nav-briancon" onclick="showLoc('briancon')">
+            <span class="rk">3</span>Briançon
+          </button><button class="navbtn" id="nav-corvara" onclick="showLoc('corvara')">
+            <span class="rk">4</span>Corvara / Alta Badia
+          </button><button class="navbtn" id="nav-soelden" onclick="showLoc('soelden')">
+            <span class="rk">5</span>Sölden / Ötztal
+          </button><button class="navbtn" id="nav-mallorca" onclick="showLoc('mallorca')">
+            <span class="rk">6</span>Mallorca / Tramuntana
+          </button><button class="navbtn" id="nav-lapalma" onclick="showLoc('lapalma')">
+            <span class="rk">7</span>La Palma
+          </button><button class="navbtn" id="nav-girona" onclick="showLoc('girona')">
+            <span class="rk">8</span>Girona
+          </button><button class="navbtn" id="nav-spindleruv" onclick="showLoc('spindleruv')">
+            <span class="rk">9</span>Špindlerův Mlýn
+          </button><button class="navbtn" id="nav-harz" onclick="showLoc('harz')">
+            <span class="rk">10</span>Braunlage / Harz
+          </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Übersicht -->
+    <section class="loc-section active" id="sec-overview">
+      <div class="hero" style="background: linear-gradient(135deg,#1a2f3d 0%,#e8590c 120%);">
+        <span class="rank-badge">10 Basislager · Stand Juni 2026</span>
+        <h2>Höhenmeter-Reviere für Endurance-Touren</h2>
+        <div class="region">Basis Berlin · Fokus Langstrecke &amp; Alpen-Höhenmeter</div>
+        <p class="tagline">Ausgangsorte, von denen aus sich sehr gute Touren mit ordentlich Höhenmetern fahren lassen — gerankt von der höchsten Pass-Dichte Europas bis zur milden Insel-Rampe. Oben in der Leiste durch die Orte schalten.</p>
+      </div>
+
+      <div class="sec-title">Ranking</div>
+      <table class="rank">
+        <thead>
+          <tr><th>Rang</th><th>Ort</th><th>Region</th><th>Basis</th><th>Charakter</th><th>Saison</th></tr>
+        </thead>
+        <tbody>
+          <tr onclick="showLoc('bormio')">
+              <td class="r">1</td>
+              <td><b>Bormio</b></td>
+              <td>IT · Lombardei</td>
+              <td>1225 m</td>
+              <td>Höchste Pass-Dichte Europas – brutal-alpin</td>
+              <td>Juni – September</td>
+            </tr><tr onclick="showLoc('bourg')">
+              <td class="r">2</td>
+              <td><b>Bourg-d&#39;Oisans</b></td>
+              <td>FR · Hautes-Alpes</td>
+              <td>720 m</td>
+              <td>Herz der Tour de France</td>
+              <td>Juni – September</td>
+            </tr><tr onclick="showLoc('briancon')">
+              <td class="r">3</td>
+              <td><b>Briançon</b></td>
+              <td>FR · Hautes-Alpes</td>
+              <td>1326 m</td>
+              <td>Höchste Stadt Europas – ruhiger</td>
+              <td>Juni – September</td>
+            </tr><tr onclick="showLoc('corvara')">
+              <td class="r">4</td>
+              <td><b>Corvara / Alta Badia</b></td>
+              <td>IT · Dolomiten</td>
+              <td>1568 m</td>
+              <td>Landschaftlich konkurrenzlos</td>
+              <td>Juni – September</td>
+            </tr><tr onclick="showLoc('soelden')">
+              <td class="r">5</td>
+              <td><b>Sölden / Ötztal</b></td>
+              <td>AT · Tirol</td>
+              <td>1368 m</td>
+              <td>Ötztaler-Radmarathon-Terrain</td>
+              <td>Juni – September</td>
+            </tr><tr onclick="showLoc('mallorca')">
+              <td class="r">6</td>
+              <td><b>Mallorca / Tramuntana</b></td>
+              <td>ES · Balearen</td>
+              <td>5 m</td>
+              <td>Lange gleichmäßige Anstiege, mild</td>
+              <td>ganzjährig · ideal Feb–Apr / Okt–Nov</td>
+            </tr><tr onclick="showLoc('lapalma')">
+              <td class="r">7</td>
+              <td><b>La Palma</b></td>
+              <td>ES · Kanaren</td>
+              <td>0 m</td>
+              <td>Längster Anstieg am Stück – heftige Rampe</td>
+              <td>ganzjährig</td>
+            </tr><tr onclick="showLoc('girona')">
+              <td class="r">8</td>
+              <td><b>Girona</b></td>
+              <td>ES · Katalonien</td>
+              <td>70 m</td>
+              <td>Profi-Hotspot, mediterran, vielseitig</td>
+              <td>März – November</td>
+            </tr><tr onclick="showLoc('spindleruv')">
+              <td class="r">9</td>
+              <td><b>Špindlerův Mlýn</b></td>
+              <td>CZ · Riesengebirge</td>
+              <td>715 m</td>
+              <td>Mittelgebirgs-Rampen, schnell ab Berlin</td>
+              <td>Mai – Oktober</td>
+            </tr><tr onclick="showLoc('harz')">
+              <td class="r">10</td>
+              <td><b>Braunlage / Harz</b></td>
+              <td>DE · Harz</td>
+              <td>600 m</td>
+              <td>Heimrunde, Trainings-Wochenende</td>
+              <td>April – Oktober</td>
+            </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-title">Vergleich der Basislager</div>
+      <div class="metric-btns" id="metric-btns">
+        <button class="mbtn active" data-metric="hm">Höchster Anstieg</button>
+        <button class="mbtn" data-metric="steep">Steilste Rampe</button>
+        <button class="mbtn" data-metric="alt">Höchster Pass</button>
+        <button class="mbtn" data-metric="fame">Bekanntheit ⭐</button>
+        <button class="mbtn" data-metric="speed">Anreise-Tempo ⭐</button>
+        <button class="mbtn" data-metric="daycost">Tageskosten</button>
+        <button class="mbtn" data-metric="travelcost">Anreisekosten</button>
+      </div>
+      <div class="metric-hint" id="metric-hint"></div>
+      <div class="barchart" id="barchart"></div>
+
+      <div class="callouts">
+        <div class="callout"><b>Maximale Höhenmeter</b><span>Bormio &gt; Bourg-d’Oisans &gt; Briançon</span></div>
+        <div class="callout"><b>Landschaftlich schönste</b><span>Corvara / Dolomiten</span></div>
+        <div class="callout"><b>Ganzjährig fahrbar</b><span>Mallorca (mild) &amp; La Palma (heftige Rampe)</span></div>
+        <div class="callout"><b>Schnell ab Berlin</b><span>Riesengebirge &amp; Harz fürs Wochenende</span></div>
+      </div>
+    </section>
+
+    <!-- Orte -->
+    <section class="loc-section" id="sec-bormio">
+        <div class="hero">
+          <span class="rank-badge">Rang 1 · Höchste Pass-Dichte Europas – brutal-alpin</span>
+          <h2>Bormio</h2>
+          <div class="region">IT · Lombardei · Basis 1225 m</div>
+          <p class="tagline">Stelvio, Gavia und Mortirolo praktisch vor der Haustür – plus Thermalbäder zur Regeneration. Wer maximale Höhenmeter auf engstem Raum sucht, ist hier richtig.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Juni – September</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~10–11 h · Bahn/Flug via Mailand</div>
+            <div class="chip"><b>Tageskosten</b>~120–175 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>4 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Stilfser Joch</h3>
+                <div class="note">48 Kehren (Prato-Seite)</div>
+                <div class="stats">
+                  <div class="stat"><b>2.758 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>21,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.530 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>7,1 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 12 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Stilfser Joch">
+    <defs>
+      <linearGradient id="g-bormio-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bormio-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.758 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.228 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">21,5 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 7,1 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo di Gavia</h3>
+                <div class="note">schmal, wild, lange Rampen</div>
+                <div class="stats">
+                  <div class="stat"><b>2.621 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>25 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.400 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,6 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 16 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo di Gavia">
+    <defs>
+      <linearGradient id="g-bormio-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bormio-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.621 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.221 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">25 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,6 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Mortirolo</h3>
+                <div class="note">steilster Anstieg der Region</div>
+                <div class="stats">
+                  <div class="stat"><b>1.852 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>12,4 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.300 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>10,5 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 18 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Mortirolo">
+    <defs>
+      <linearGradient id="g-bormio-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bormio-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">1.852 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">552 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">12,4 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 10,5 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Umbrailpass</h3>
+                <div class="note">Schweizer Seite</div>
+                <div class="stats">
+                  <div class="stat"><b>2.503 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>13 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.100 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>8,5 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 14 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Umbrailpass">
+    <defs>
+      <linearGradient id="g-bormio-3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bormio-3)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.503 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.403 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">13 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 8,5 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-bourg">
+        <div class="hero">
+          <span class="rank-badge">Rang 2 · Herz der Tour de France</span>
+          <h2>Bourg-d&#39;Oisans</h2>
+          <div class="region">FR · Hautes-Alpes · Basis 720 m</div>
+          <p class="tagline">Die mythischen Tour-Anstiege als Tagesziele aneinandergereiht – Alpe d’Huez als Pflicht, Galibier und Croix de Fer als große Schleifen.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Juni – September</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~11–12 h · Flug Lyon/Grenoble</div>
+            <div class="chip"><b>Tageskosten</b>~115–165 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>4 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Alpe d&#39;Huez</h3>
+                <div class="note">21 nummerierte Kehren</div>
+                <div class="stats">
+                  <div class="stat"><b>1.860 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>13,8 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.120 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>8,1 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 13 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Alpe d'Huez">
+    <defs>
+      <linearGradient id="g-bourg-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bourg-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">1.860 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">740 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">13,8 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 8,1 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Col du Galibier (Lautaret-Seite)</h3>
+                <div class="note">steile Schlussrampe</div>
+                <div class="stats">
+                  <div class="stat"><b>2.642 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>8,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>555 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>6,5 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 12 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col du Galibier (Lautaret-Seite)">
+    <defs>
+      <linearGradient id="g-bourg-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bourg-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.642 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">2.087 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">8,5 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 6,5 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Col de la Croix de Fer</h3>
+                <div class="note">welliges Profil, Gegenanstiege</div>
+                <div class="stats">
+                  <div class="stat"><b>2.067 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>29 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.500 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,2 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 11 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col de la Croix de Fer">
+    <defs>
+      <linearGradient id="g-bourg-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bourg-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.067 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">567 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">29 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,2 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Col du Sabot</h3>
+                <div class="note">ruhiger Geheimtipp, steil</div>
+                <div class="stats">
+                  <div class="stat"><b>2.100 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>13 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.300 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>10,0 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 14 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col du Sabot">
+    <defs>
+      <linearGradient id="g-bourg-3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-bourg-3)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.100 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">800 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">13 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 10,0 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-briancon">
+        <div class="hero">
+          <span class="rank-badge">Rang 3 · Höchste Stadt Europas – ruhiger</span>
+          <h2>Briançon</h2>
+          <div class="region">FR · Hautes-Alpes · Basis 1326 m</div>
+          <p class="tagline">Ähnlich hochkarätige Pässe wie Bourg-d’Oisans, aber ohne den Massen-Trubel. Die Höhenlage der Stadt verschafft schon zum Start Höhenmeter-Vorsprung.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Juni – September</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~11–12 h · Flug Turin</div>
+            <div class="chip"><b>Tageskosten</b>~110–155 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>3 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Col d&#39;Izoard</h3>
+                <div class="note">Casse Déserte am Gipfel</div>
+                <div class="stats">
+                  <div class="stat"><b>2.360 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>19 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.100 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,8 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 10 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col d'Izoard">
+    <defs>
+      <linearGradient id="g-briancon-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-briancon-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.360 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.260 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">19 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,8 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Col d&#39;Agnel</h3>
+                <div class="note">einer der höchsten Alpenpässe</div>
+                <div class="stats">
+                  <div class="stat"><b>2.744 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>20,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.490 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>7,3 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 13 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col d'Agnel">
+    <defs>
+      <linearGradient id="g-briancon-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-briancon-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.744 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.254 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">20,5 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 7,3 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Col du Granon</h3>
+                <div class="note">sehr steil, kaum Verkehr</div>
+                <div class="stats">
+                  <div class="stat"><b>2.413 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>11,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.060 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>9,2 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 12 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Col du Granon">
+    <defs>
+      <linearGradient id="g-briancon-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-briancon-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.413 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.353 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">11,5 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 9,2 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-corvara">
+        <div class="hero">
+          <span class="rank-badge">Rang 4 · Landschaftlich konkurrenzlos</span>
+          <h2>Corvara / Alta Badia</h2>
+          <div class="region">IT · Dolomiten · Basis 1568 m</div>
+          <p class="tagline">Die Sellaronda als Signature-Runde, mit Giau und Falzarego zur Maratona-Strecke erweiterbar. Moderate Einzelanstiege, hohe Tages-Höhenmeter durch Kombination.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Juni – September</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~9 h · Flug Innsbruck/Verona</div>
+            <div class="chip"><b>Tageskosten</b>~140–195 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>6 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Passo Giau</h3>
+                <div class="note">härtester der Region</div>
+                <div class="stats">
+                  <div class="stat"><b>2.236 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>10 km</b><span>Länge</span></div>
+                  <div class="stat"><b>920 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat hard"><b>9,2 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 14 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Giau">
+    <defs>
+      <linearGradient id="g-corvara-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-hard)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-hard)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-hard)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.236 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.316 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">10 km</text>
+    <text x="438" y="36" class="bigpct hard" text-anchor="end">Ø 9,2 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo Pordoi</h3>
+                <div class="note">meiste Kehren der Sellaronda</div>
+                <div class="stats">
+                  <div class="stat"><b>2.239 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>9 km</b><span>Länge</span></div>
+                  <div class="stat"><b>640 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>7,1 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 10 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Pordoi">
+    <defs>
+      <linearGradient id="g-corvara-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.239 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.599 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">9 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 7,1 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo Gardena</h3>
+                <div class="note">Teil der Sellaronda</div>
+                <div class="stats">
+                  <div class="stat"><b>2.121 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>10 km</b><span>Länge</span></div>
+                  <div class="stat"><b>570 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,7 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 9 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Gardena">
+    <defs>
+      <linearGradient id="g-corvara-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.121 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.551 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">10 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,7 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo Sella</h3>
+                <div class="note">Teil der Sellaronda</div>
+                <div class="stats">
+                  <div class="stat"><b>2.244 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>12 km</b><span>Länge</span></div>
+                  <div class="stat"><b>640 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,3 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 11 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Sella">
+    <defs>
+      <linearGradient id="g-corvara-3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-3)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.244 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.604 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">12 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,3 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo Falzarego</h3>
+                <div class="note">Richtung Cortina</div>
+                <div class="stats">
+                  <div class="stat"><b>2.105 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>12 km</b><span>Länge</span></div>
+                  <div class="stat"><b>640 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,3 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 10 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Falzarego">
+    <defs>
+      <linearGradient id="g-corvara-4" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-4)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.105 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.465 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">12 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,3 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Passo Campolongo</h3>
+                <div class="note">kurzer Verbinder</div>
+                <div class="stats">
+                  <div class="stat"><b>1.875 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>6 km</b><span>Länge</span></div>
+                  <div class="stat"><b>300 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,0 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 9 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Passo Campolongo">
+    <defs>
+      <linearGradient id="g-corvara-5" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-corvara-5)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">1.875 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">1.575 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">6 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,0 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-soelden">
+        <div class="hero">
+          <span class="rank-badge">Rang 5 · Ötztaler-Radmarathon-Terrain</span>
+          <h2>Sölden / Ötztal</h2>
+          <div class="region">AT · Tirol · Basis 1368 m</div>
+          <p class="tagline">Lange, gleichmäßige Anstiege und das komplette Ötztaler-Terrain vor der Tür. Timmelsjoch allein ist schon ein imposantes Tagesziel.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Juni – September</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Bahn bis Ötztal-Bf. ~8–9 h · Auto ~8 h</div>
+            <div class="chip"><b>Tageskosten</b>~130–185 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>3 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Timmelsjoch (ab Sölden)</h3>
+                <div class="note">Maut-Hochalpenstraße</div>
+                <div class="stats">
+                  <div class="stat"><b>2.474 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>28,7 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.760 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>6,1 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 14 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Timmelsjoch (ab Sölden)">
+    <defs>
+      <linearGradient id="g-soelden-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-soelden-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.474 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">714 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">28,7 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 6,1 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Kühtai (Sellraintal)</h3>
+                <div class="note">lange gleichmäßige Rampe</div>
+                <div class="stats">
+                  <div class="stat"><b>2.020 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>18,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.260 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>6,8 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 18 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Kühtai (Sellraintal)">
+    <defs>
+      <linearGradient id="g-soelden-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-soelden-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.020 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">760 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">18,5 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 6,8 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Jaufenpass</h3>
+                <div class="note">Teil der Ötzi-Runde</div>
+                <div class="stats">
+                  <div class="stat"><b>2.094 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>15,5 km</b><span>Länge</span></div>
+                  <div class="stat"><b>1.150 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>7,4 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 10 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Jaufenpass">
+    <defs>
+      <linearGradient id="g-soelden-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-soelden-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.094 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">944 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">15,5 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 7,4 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-mallorca">
+        <div class="hero">
+          <span class="rank-badge">Rang 6 · Lange gleichmäßige Anstiege, mild</span>
+          <h2>Mallorca / Tramuntana</h2>
+          <div class="region">ES · Balearen · Basis 5 m</div>
+          <p class="tagline">Mildes Klima, perfekt ausgebaute Rad-Infrastruktur und lange, gleichmäßige Anstiege im Tramuntana-Gebirge. Sa Calobra ist das ikonische Pflichtstück.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>ganzjährig · ideal Feb–Apr / Okt–Nov</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Direktflug BER–Palma ~2 h 45</div>
+            <div class="chip"><b>Tageskosten</b>~105–165 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>3 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Sa Calobra (Coll dels Reis)</h3>
+                <div class="note">berühmte Kehren, vom Meer hoch</div>
+                <div class="stats">
+                  <div class="stat"><b>668 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>9,4 km</b><span>Länge</span></div>
+                  <div class="stat"><b>670 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>7,1 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 12 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Sa Calobra (Coll dels Reis)">
+    <defs>
+      <linearGradient id="g-mallorca-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-mallorca-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">668 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">-2 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">9,4 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 7,1 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Puig Major (Sóller-Seite)</h3>
+                <div class="note">höchste Passstraße der Insel</div>
+                <div class="stats">
+                  <div class="stat"><b>880 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>14 km</b><span>Länge</span></div>
+                  <div class="stat"><b>800 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,7 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 8 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Puig Major (Sóller-Seite)">
+    <defs>
+      <linearGradient id="g-mallorca-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-mallorca-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">880 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">80 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">14 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,7 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Coll de Sóller</h3>
+                <div class="note">alte Serpentinenstraße</div>
+                <div class="stats">
+                  <div class="stat"><b>496 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>7 km</b><span>Länge</span></div>
+                  <div class="stat"><b>350 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,0 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 8 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Coll de Sóller">
+    <defs>
+      <linearGradient id="g-mallorca-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-mallorca-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">496 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">146 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">7 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,0 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-lapalma">
+        <div class="hero">
+          <span class="rank-badge">Rang 7 · Längster Anstieg am Stück – heftige Rampe</span>
+          <h2>La Palma</h2>
+          <div class="region">ES · Kanaren · Basis 0 m</div>
+          <p class="tagline">Der ultimative Lange-Rampe-Test: vom Atlantik am Stück bis zum Observatorium. Mental und körperlich ein Endurance-Brett, kaum vergleichbar in Europa.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>ganzjährig</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Flug via Madrid/Teneriffa</div>
+            <div class="chip"><b>Tageskosten</b>~90–140 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>1 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Roque de los Muchachos</h3>
+                <div class="note">vom Meer am Stück – einer der längsten Anstiege der Welt</div>
+                <div class="stats">
+                  <div class="stat"><b>2.426 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>45 km</b><span>Länge</span></div>
+                  <div class="stat"><b>2.426 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,4 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 12 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Roque de los Muchachos">
+    <defs>
+      <linearGradient id="g-lapalma-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-lapalma-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">2.426 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">0 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">45 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,4 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-girona">
+        <div class="hero">
+          <span class="rank-badge">Rang 8 · Profi-Hotspot, mediterran, vielseitig</span>
+          <h2>Girona</h2>
+          <div class="region">ES · Katalonien · Basis 70 m</div>
+          <p class="tagline">Vielfalt und Wärme: Küstenrouten, welliges Hinterland und erste Pyrenäen-Rampen ab der mittelalterlichen Stadt. Exzellente Rad-Café-Szene.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>März – November</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Flug BER–Barcelona/Girona ~2,5 h</div>
+            <div class="chip"><b>Tageskosten</b>~115–175 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>3 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Rocacorba</h3>
+                <div class="note">berühmter Test-Anstieg</div>
+                <div class="stats">
+                  <div class="stat"><b>990 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>12 km</b><span>Länge</span></div>
+                  <div class="stat"><b>750 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat mid"><b>6,3 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 15 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Rocacorba">
+    <defs>
+      <linearGradient id="g-girona-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-mid)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-mid)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-girona-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-mid)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">990 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">240 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">12 km</text>
+    <text x="438" y="36" class="bigpct mid" text-anchor="end">Ø 6,3 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Mare de Déu del Mont</h3>
+                <div class="note">Pyrenäen-Ausläufer</div>
+                <div class="stats">
+                  <div class="stat"><b>1.100 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>18 km</b><span>Länge</span></div>
+                  <div class="stat"><b>900 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,0 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 11 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Mare de Déu del Mont">
+    <defs>
+      <linearGradient id="g-girona-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-girona-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">1.100 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">200 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">18 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,0 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Els Àngels</h3>
+                <div class="note">Profi-Klassiker ab der Stadt</div>
+                <div class="stats">
+                  <div class="stat"><b>485 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>10 km</b><span>Länge</span></div>
+                  <div class="stat"><b>380 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>3,8 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 8 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Els Àngels">
+    <defs>
+      <linearGradient id="g-girona-2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-girona-2)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">485 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">105 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">10 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 3,8 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-spindleruv">
+        <div class="hero">
+          <span class="rank-badge">Rang 9 · Mittelgebirgs-Rampen, schnell ab Berlin</span>
+          <h2>Špindlerův Mlýn</h2>
+          <div class="region">CZ · Riesengebirge · Basis 715 m</div>
+          <p class="tagline">Keine Hochalpen, dafür knackige Mittelgebirgs-Rampen, in denen sich gut Höhenmeter aufsummieren – das nächste Auswärts-Basislager Richtung Süden.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>Mai – Oktober</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~4 h ab Berlin</div>
+            <div class="chip"><b>Tageskosten</b>~80–125 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>1 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Špindlerova bouda</h3>
+                <div class="note">Kammübergang Richtung Polen</div>
+                <div class="stats">
+                  <div class="stat"><b>1.198 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>9 km</b><span>Länge</span></div>
+                  <div class="stat"><b>480 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>5,3 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 9 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Špindlerova bouda">
+    <defs>
+      <linearGradient id="g-spindleruv-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-spindleruv-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">1.198 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">718 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">9 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 5,3 %</text>
+  </svg>
+              </div>
+        </div>
+      </section><section class="loc-section" id="sec-harz">
+        <div class="hero">
+          <span class="rank-badge">Rang 10 · Heimrunde, Trainings-Wochenende</span>
+          <h2>Braunlage / Harz</h2>
+          <div class="region">DE · Harz · Basis 600 m</div>
+          <p class="tagline">Die Heimrunde: dauerwelliges Profil mit ausreichend langen Anstiegen für ein schnelles, günstiges Trainingswochenende. Brocken-Gipfel gesperrt, Torfhaus als Ziel.</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>April – Oktober</div>
+            <div class="chip"><b>Anreise ab Berlin</b>Auto ~3 h ab Berlin</div>
+            <div class="chip"><b>Tageskosten</b>~95–140 €/Tag</div>
+            <div class="chip"><b>Anstiege</b>2 dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          <div class="card">
+                <h3>Torfhaus (ab Bad Harzburg)</h3>
+                <div class="note">klassischer Harz-Anstieg an der B4</div>
+                <div class="stats">
+                  <div class="stat"><b>800 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>13 km</b><span>Länge</span></div>
+                  <div class="stat"><b>480 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>3,7 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 8 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Torfhaus (ab Bad Harzburg)">
+    <defs>
+      <linearGradient id="g-harz-0" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-harz-0)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">800 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">320 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">13 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 3,7 %</text>
+  </svg>
+              </div><div class="card">
+                <h3>Sonnenberg</h3>
+                <div class="note">ruhige Oberharz-Auffahrt</div>
+                <div class="stats">
+                  <div class="stat"><b>850 m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>9 km</b><span>Länge</span></div>
+                  <div class="stat"><b>360 Hm</b><span>Höhenmeter</span></div>
+                  <div class="stat easy"><b>4,0 %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. 8 %</b><span>max.</span></div>
+                </div>
+                
+  <svg viewBox="0 0 460 168" class="profile" role="img" aria-label="Höhenprofil Sonnenberg">
+    <defs>
+      <linearGradient id="g-harz-1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-easy)" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-easy)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="78.0" x2="442" y2="78.0" class="grid"/><line x1="50" y1="108.0" x2="442" y2="108.0" class="grid"/><line x1="50" y1="138.0" x2="442" y2="138.0" class="grid"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0 L 442.0 138.0 L 50 138.0 Z" fill="url(#g-harz-1)"/>
+    <path d="M50.0 138.0 L57.0 137.9 L64.0 137.6 L71.0 137.2 L78.0 136.5 L85.0 135.7 L92.0 134.6 L99.0 133.4 L106.0 132.1 L113.0 130.5 L120.0 128.8 L127.0 126.9 L134.0 124.9 L141.0 122.7 L148.0 120.4 L155.0 118.0 L162.0 115.4 L169.0 112.7 L176.0 109.9 L183.0 107.0 L190.0 104.0 L197.0 101.0 L204.0 97.8 L211.0 94.6 L218.0 91.4 L225.0 88.1 L232.0 84.7 L239.0 81.4 L246.0 78.0 L253.0 74.6 L260.0 71.3 L267.0 67.9 L274.0 64.6 L281.0 61.4 L288.0 58.2 L295.0 55.0 L302.0 52.0 L309.0 49.0 L316.0 46.1 L323.0 43.3 L330.0 40.6 L337.0 38.0 L344.0 35.6 L351.0 33.3 L358.0 31.1 L365.0 29.1 L372.0 27.2 L379.0 25.5 L386.0 23.9 L393.0 22.6 L400.0 21.4 L407.0 20.3 L414.0 19.5 L421.0 18.8 L428.0 18.4 L435.0 18.1 L442.0 18.0" fill="none" stroke="var(--prof-easy)" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="44" y="22" class="ax" text-anchor="end">850 m</text>
+    <text x="44" y="138" class="ax" text-anchor="end">490 m</text>
+    <text x="50" y="159" class="ax" text-anchor="start">0 km</text>
+    <text x="442" y="159" class="ax" text-anchor="end">9 km</text>
+    <text x="438" y="36" class="bigpct easy" text-anchor="end">Ø 4,0 %</text>
+  </svg>
+              </div>
+        </div>
+      </section>
+  </main>
+
+  <footer>
+    <hr>
+    <p><b>Hinweis:</b> Höhen, Längen und Höhenmeter sind gängige Richtwerte (Stand Juni 2026). Die Ø-Steigung wird aus Höhenmeter/Länge berechnet; Max-Steigungen sind mit „ca." gekennzeichnete Näherungen. Die Höhenprofile sind stilisierte Darstellungen des Gesamtanstiegs, keine vermessenen GPX-Profile. Lebende Übersicht — wird laufend erweitert.</p>
+  </footer>
+
+  <script>
+    function showLoc(id) {
+      document.querySelectorAll('.loc-section').forEach((s) => s.classList.remove('active'));
+      var sec = document.getElementById('sec-' + id);
+      if (sec) sec.classList.add('active');
+      document.querySelectorAll('.navbtn').forEach((b) => b.classList.remove('active'));
+      var nav = document.getElementById('nav-' + id);
+      if (nav) {
+        nav.classList.add('active');
+        nav.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    /* --- Umschaltbares Vergleichs-Diagramm --- */
+    var CHART_DATA = [
+      { name: 'Bormio',                hm: 1530, steep: 18, alt: 2758, fame: 10, speed: 4,  daycost: 148, travelcost: 300 },
+      { name: "Bourg-d'Oisans",        hm: 1500, steep: 14, alt: 2642, fame: 10, speed: 3,  daycost: 140, travelcost: 375 },
+      { name: 'Briançon',              hm: 1490, steep: 13, alt: 2744, fame: 8,  speed: 3,  daycost: 133, travelcost: 355 },
+      { name: 'Corvara / Alta Badia',  hm: 920,  steep: 14, alt: 2244, fame: 9,  speed: 6,  daycost: 168, travelcost: 245 },
+      { name: 'Sölden / Ötztal',       hm: 1760, steep: 18, alt: 2474, fame: 7,  speed: 6,  daycost: 158, travelcost: 200 },
+      { name: 'Mallorca / Tramuntana', hm: 800,  steep: 12, alt: 880,  fame: 8,  speed: 8,  daycost: 135, travelcost: 220 },
+      { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  speed: 2,  daycost: 115, travelcost: 280 },
+      { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  speed: 7,  daycost: 145, travelcost: 200 },
+      { name: 'Špindlerův Mlýn',       hm: 480,  steep: 9,  alt: 1198, fame: 3,  speed: 9,  daycost: 103, travelcost: 100 },
+      { name: 'Braunlage / Harz',      hm: 480,  steep: 8,  alt: 850,  fame: 3,  speed: 10, daycost: 118, travelcost: 65 }
+    ];
+    function nf(n) { return n.toLocaleString('de-DE'); }
+    var METRICS = {
+      hm:         { lower: false, hint: 'Höhenmeter des größten Anstiegs am Ort',                                    fmt: function (v) { return nf(v) + ' Hm'; } },
+      steep:      { lower: false, hint: 'Maximale Steigung des steilsten Anstiegs',                                  fmt: function (v) { return v + ' %'; } },
+      alt:        { lower: false, hint: 'Gipfelhöhe des höchsten erreichbaren Passes',                               fmt: function (v) { return nf(v) + ' m'; } },
+      fame:       { lower: false, hint: 'Subjektive Einschätzung, wie legendär die Pässe sind (0–10 ⭐)',            fmt: function (v) { return v + ' / 10 ⭐'; } },
+      speed:      { lower: false, hint: 'Wie schnell man ab Berlin vor Ort ist (0–10 ⭐, 10 = sehr schnell)',        fmt: function (v) { return v + ' / 10 ⭐'; } },
+      daycost:    { lower: true,  hint: 'Mittelklasse-Hotel + Verpflegung, Richtwert — weniger = günstiger',         fmt: function (v) { return '~' + v + ' €/Tag'; } },
+      travelcost: { lower: true,  hint: 'Günstigste sinnvolle Anreise hin & zurück inkl. Radtransport — weniger = günstiger', fmt: function (v) { return '~' + nf(v) + ' €'; } }
+    };
+    function renderChart(key) {
+      var m = METRICS[key];
+      var rows = CHART_DATA.slice().sort(function (a, b) { return m.lower ? a[key] - b[key] : b[key] - a[key]; });
+      var maxv = Math.max.apply(null, CHART_DATA.map(function (d) { return d[key]; }));
+      var html = rows.map(function (d) {
+        var w = Math.max(4, Math.round((d[key] / maxv) * 100));
+        return '<div class="bar-row"><div class="lbl">' + d.name + '</div>' +
+               '<div class="bar-track"><div class="bar-fill" style="width:' + w + '%"></div></div>' +
+               '<div class="val">' + m.fmt(d[key]) + '</div></div>';
+      }).join('');
+      document.getElementById('barchart').innerHTML = html;
+      document.getElementById('metric-hint').textContent = m.hint;
+      document.querySelectorAll('.mbtn').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-metric') === key);
+      });
+    }
+    document.querySelectorAll('.mbtn').forEach(function (b) {
+      b.addEventListener('click', function () { renderChart(b.getAttribute('data-metric')); });
+    });
+    renderChart('hm');
+
+  </script>
+</body>
+</html>

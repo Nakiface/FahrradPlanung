@@ -1,0 +1,482 @@
+---
+// =============================================================
+//  Rennrad-Basislager Europa — Daten & Rendering
+//  Werte = gängige Richtwerte (Stand Juni 2026).
+//  Ø-Steigung wird aus Hm/Länge berechnet, Max-% = ca.-Näherung.
+// =============================================================
+
+const locations = [
+  {
+    id: 'bormio', rank: 1, name: 'Bormio', region: 'IT · Lombardei', base: 1225,
+    character: 'Höchste Pass-Dichte Europas – brutal-alpin',
+    season: 'Juni – September', travel: 'Auto ~10–11 h · Bahn/Flug via Mailand',
+    dayCost: '~120–175 €/Tag',
+    tagline: 'Stelvio, Gavia und Mortirolo praktisch vor der Haustür – plus Thermalbäder zur Regeneration. Wer maximale Höhenmeter auf engstem Raum sucht, ist hier richtig.',
+    climbs: [
+      { name: 'Stilfser Joch', summit: 2758, length: 21.5, hm: 1530, max: 12, note: '48 Kehren (Prato-Seite)' },
+      { name: 'Passo di Gavia', summit: 2621, length: 25, hm: 1400, max: 16, note: 'schmal, wild, lange Rampen' },
+      { name: 'Mortirolo', summit: 1852, length: 12.4, hm: 1300, max: 18, note: 'steilster Anstieg der Region' },
+      { name: 'Umbrailpass', summit: 2503, length: 13, hm: 1100, max: 14, note: 'Schweizer Seite' },
+    ],
+  },
+  {
+    id: 'bourg', rank: 2, name: "Bourg-d'Oisans", region: 'FR · Hautes-Alpes', base: 720,
+    character: 'Herz der Tour de France',
+    season: 'Juni – September', travel: 'Auto ~11–12 h · Flug Lyon/Grenoble',
+    dayCost: '~115–165 €/Tag',
+    tagline: 'Die mythischen Tour-Anstiege als Tagesziele aneinandergereiht – Alpe d’Huez als Pflicht, Galibier und Croix de Fer als große Schleifen.',
+    climbs: [
+      { name: "Alpe d'Huez", summit: 1860, length: 13.8, hm: 1120, max: 13, note: '21 nummerierte Kehren' },
+      { name: 'Col du Galibier (Lautaret-Seite)', summit: 2642, length: 8.5, hm: 555, max: 12, note: 'steile Schlussrampe' },
+      { name: 'Col de la Croix de Fer', summit: 2067, length: 29, hm: 1500, max: 11, note: 'welliges Profil, Gegenanstiege' },
+      { name: 'Col du Sabot', summit: 2100, length: 13, hm: 1300, max: 14, note: 'ruhiger Geheimtipp, steil' },
+    ],
+  },
+  {
+    id: 'briancon', rank: 3, name: 'Briançon', region: 'FR · Hautes-Alpes', base: 1326,
+    character: 'Höchste Stadt Europas – ruhiger',
+    season: 'Juni – September', travel: 'Auto ~11–12 h · Flug Turin',
+    dayCost: '~110–155 €/Tag',
+    tagline: 'Ähnlich hochkarätige Pässe wie Bourg-d’Oisans, aber ohne den Massen-Trubel. Die Höhenlage der Stadt verschafft schon zum Start Höhenmeter-Vorsprung.',
+    climbs: [
+      { name: "Col d'Izoard", summit: 2360, length: 19, hm: 1100, max: 10, note: 'Casse Déserte am Gipfel' },
+      { name: "Col d'Agnel", summit: 2744, length: 20.5, hm: 1490, max: 13, note: 'einer der höchsten Alpenpässe' },
+      { name: 'Col du Granon', summit: 2413, length: 11.5, hm: 1060, max: 12, note: 'sehr steil, kaum Verkehr' },
+    ],
+  },
+  {
+    id: 'corvara', rank: 4, name: 'Corvara / Alta Badia', region: 'IT · Dolomiten', base: 1568,
+    character: 'Landschaftlich konkurrenzlos',
+    season: 'Juni – September', travel: 'Auto ~9 h · Flug Innsbruck/Verona',
+    dayCost: '~140–195 €/Tag',
+    tagline: 'Die Sellaronda als Signature-Runde, mit Giau und Falzarego zur Maratona-Strecke erweiterbar. Moderate Einzelanstiege, hohe Tages-Höhenmeter durch Kombination.',
+    climbs: [
+      { name: 'Passo Giau', summit: 2236, length: 10, hm: 920, max: 14, note: 'härtester der Region' },
+      { name: 'Passo Pordoi', summit: 2239, length: 9, hm: 640, max: 10, note: 'meiste Kehren der Sellaronda' },
+      { name: 'Passo Gardena', summit: 2121, length: 10, hm: 570, max: 9, note: 'Teil der Sellaronda' },
+      { name: 'Passo Sella', summit: 2244, length: 12, hm: 640, max: 11, note: 'Teil der Sellaronda' },
+      { name: 'Passo Falzarego', summit: 2105, length: 12, hm: 640, max: 10, note: 'Richtung Cortina' },
+      { name: 'Passo Campolongo', summit: 1875, length: 6, hm: 300, max: 9, note: 'kurzer Verbinder' },
+    ],
+  },
+  {
+    id: 'soelden', rank: 5, name: 'Sölden / Ötztal', region: 'AT · Tirol', base: 1368,
+    character: 'Ötztaler-Radmarathon-Terrain',
+    season: 'Juni – September', travel: 'Bahn bis Ötztal-Bf. ~8–9 h · Auto ~8 h',
+    dayCost: '~130–185 €/Tag',
+    tagline: 'Lange, gleichmäßige Anstiege und das komplette Ötztaler-Terrain vor der Tür. Timmelsjoch allein ist schon ein imposantes Tagesziel.',
+    climbs: [
+      { name: 'Timmelsjoch (ab Sölden)', summit: 2474, length: 28.7, hm: 1760, max: 14, note: 'Maut-Hochalpenstraße' },
+      { name: 'Kühtai (Sellraintal)', summit: 2020, length: 18.5, hm: 1260, max: 18, note: 'lange gleichmäßige Rampe' },
+      { name: 'Jaufenpass', summit: 2094, length: 15.5, hm: 1150, max: 10, note: 'Teil der Ötzi-Runde' },
+    ],
+  },
+  {
+    id: 'mallorca', rank: 6, name: 'Mallorca / Tramuntana', region: 'ES · Balearen', base: 5,
+    character: 'Lange gleichmäßige Anstiege, mild',
+    season: 'ganzjährig · ideal Feb–Apr / Okt–Nov', travel: 'Direktflug BER–Palma ~2 h 45',
+    dayCost: '~105–165 €/Tag',
+    tagline: 'Mildes Klima, perfekt ausgebaute Rad-Infrastruktur und lange, gleichmäßige Anstiege im Tramuntana-Gebirge. Sa Calobra ist das ikonische Pflichtstück.',
+    climbs: [
+      { name: 'Sa Calobra (Coll dels Reis)', summit: 668, length: 9.4, hm: 670, max: 12, note: 'berühmte Kehren, vom Meer hoch' },
+      { name: 'Puig Major (Sóller-Seite)', summit: 880, length: 14, hm: 800, max: 8, note: 'höchste Passstraße der Insel' },
+      { name: 'Coll de Sóller', summit: 496, length: 7, hm: 350, max: 8, note: 'alte Serpentinenstraße' },
+    ],
+  },
+  {
+    id: 'lapalma', rank: 7, name: 'La Palma', region: 'ES · Kanaren', base: 0,
+    character: 'Längster Anstieg am Stück – heftige Rampe',
+    season: 'ganzjährig', travel: 'Flug via Madrid/Teneriffa',
+    dayCost: '~90–140 €/Tag',
+    tagline: 'Der ultimative Lange-Rampe-Test: vom Atlantik am Stück bis zum Observatorium. Mental und körperlich ein Endurance-Brett, kaum vergleichbar in Europa.',
+    climbs: [
+      { name: 'Roque de los Muchachos', summit: 2426, length: 45, hm: 2426, max: 12, note: 'vom Meer am Stück – einer der längsten Anstiege der Welt' },
+    ],
+  },
+  {
+    id: 'girona', rank: 8, name: 'Girona', region: 'ES · Katalonien', base: 70,
+    character: 'Profi-Hotspot, mediterran, vielseitig',
+    season: 'März – November', travel: 'Flug BER–Barcelona/Girona ~2,5 h',
+    dayCost: '~115–175 €/Tag',
+    tagline: 'Vielfalt und Wärme: Küstenrouten, welliges Hinterland und erste Pyrenäen-Rampen ab der mittelalterlichen Stadt. Exzellente Rad-Café-Szene.',
+    climbs: [
+      { name: 'Rocacorba', summit: 990, length: 12, hm: 750, max: 15, note: 'berühmter Test-Anstieg' },
+      { name: 'Mare de Déu del Mont', summit: 1100, length: 18, hm: 900, max: 11, note: 'Pyrenäen-Ausläufer' },
+      { name: 'Els Àngels', summit: 485, length: 10, hm: 380, max: 8, note: 'Profi-Klassiker ab der Stadt' },
+    ],
+  },
+  {
+    id: 'spindleruv', rank: 9, name: 'Špindlerův Mlýn', region: 'CZ · Riesengebirge', base: 715,
+    character: 'Mittelgebirgs-Rampen, schnell ab Berlin',
+    season: 'Mai – Oktober', travel: 'Auto ~4 h ab Berlin',
+    dayCost: '~80–125 €/Tag',
+    tagline: 'Keine Hochalpen, dafür knackige Mittelgebirgs-Rampen, in denen sich gut Höhenmeter aufsummieren – das nächste Auswärts-Basislager Richtung Süden.',
+    climbs: [
+      { name: 'Špindlerova bouda', summit: 1198, length: 9, hm: 480, max: 9, note: 'Kammübergang Richtung Polen' },
+    ],
+  },
+  {
+    id: 'harz', rank: 10, name: 'Braunlage / Harz', region: 'DE · Harz', base: 600,
+    character: 'Heimrunde, Trainings-Wochenende',
+    season: 'April – Oktober', travel: 'Auto ~3 h ab Berlin',
+    dayCost: '~95–140 €/Tag',
+    tagline: 'Die Heimrunde: dauerwelliges Profil mit ausreichend langen Anstiegen für ein schnelles, günstiges Trainingswochenende. Brocken-Gipfel gesperrt, Torfhaus als Ziel.',
+    climbs: [
+      { name: 'Torfhaus (ab Bad Harzburg)', summit: 800, length: 13, hm: 480, max: 8, note: 'klassischer Harz-Anstieg an der B4' },
+      { name: 'Sonnenberg', summit: 850, length: 9, hm: 360, max: 8, note: 'ruhige Oberharz-Auffahrt' },
+    ],
+  },
+];
+
+// ---- Hilfsfunktionen ---------------------------------------
+const fmt = (n) => n.toLocaleString('de-DE');
+const pct = (x) => x.toFixed(1).replace('.', ',');
+const avgPct = (c) => (c.hm / (c.length * 10));
+const steepClass = (a) => (a < 6 ? 'easy' : a < 8 ? 'mid' : 'hard');
+
+// SVG-Höhenprofil für einen Anstieg
+function profileSVG(c, uid) {
+  const W = 460, H = 168, padL = 50, padR = 18, padT = 18, padB = 30;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const base = Math.round(c.summit - c.hm);
+  const N = 56;
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const ease = 0.5 * (1 - Math.cos(Math.PI * t)); // monoton steigende S-Kurve
+    const x = padL + t * innerW;
+    const y = padT + (1 - ease) * innerH;
+    pts.push([x, y]);
+  }
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = line + ` L ${(padL + innerW).toFixed(1)} ${(padT + innerH).toFixed(1)} L ${padL} ${(padT + innerH).toFixed(1)} Z`;
+  const a = avgPct(c);
+  const grid = [0.5, 0.75, 1].map((g) => {
+    const y = padT + g * innerH;
+    return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${padL + innerW}" y2="${y.toFixed(1)}" class="grid"/>`;
+  }).join('');
+  return `
+  <svg viewBox="0 0 ${W} ${H}" class="profile" role="img" aria-label="Höhenprofil ${c.name}">
+    <defs>
+      <linearGradient id="g-${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--prof-${steepClass(a)})" stop-opacity="0.55"/>
+        <stop offset="1" stop-color="var(--prof-${steepClass(a)})" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    <path d="${area}" fill="url(#g-${uid})"/>
+    <path d="${line}" fill="none" stroke="var(--prof-${steepClass(a)})" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="${padL - 6}" y="${padT + 4}" class="ax" text-anchor="end">${fmt(c.summit)} m</text>
+    <text x="${padL - 6}" y="${padT + innerH}" class="ax" text-anchor="end">${fmt(base)} m</text>
+    <text x="${padL}" y="${H - 9}" class="ax" text-anchor="start">0 km</text>
+    <text x="${padL + innerW}" y="${H - 9}" class="ax" text-anchor="end">${c.length.toLocaleString('de-DE')} km</text>
+    <text x="${padL + innerW - 4}" y="${padT + 18}" class="bigpct ${steepClass(a)}" text-anchor="end">Ø ${pct(a)} %</text>
+  </svg>`;
+}
+
+// Übersichts-Balkendiagramm: größter Anstieg (Hm) je Ort
+const maxHm = locations.map((l) => ({ name: l.name, id: l.id, hm: Math.max(...l.climbs.map((c) => c.hm)) }));
+const peakHm = Math.max(...maxHm.map((m) => m.hm));
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rennrad-Basislager Europa</title>
+  <style is:inline>
+    :root {
+      --ink: #16212e; --muted: #5d6e7e; --line: #e4eaf0; --bg: #f5f8fb;
+      --card: #ffffff; --nav: #122230; --nav-ink: #cfe0ec; --accent: #e8590c;
+      --accent2: #1f7a8c;
+      --prof-easy: #1f9d8f; --prof-mid: #e8990c; --prof-hard: #e0431f;
+      --shadow: 0 1px 3px rgba(20,40,60,.07), 0 8px 28px rgba(20,40,60,.06);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+    }
+    /* ---- Navbar ---- */
+    header.nav {
+      position: sticky; top: 0; z-index: 50; background: var(--nav);
+      box-shadow: 0 2px 14px rgba(0,0,0,.18);
+    }
+    .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; }
+    .brand .mark { font-size: 20px; }
+    .brand h1 { font-size: 16px; margin: 0; color: #fff; font-weight: 700; letter-spacing: .2px; }
+    .brand span { color: #7fa3bd; font-size: 12.5px; margin-left: 2px; }
+    .tabs {
+      display: flex; gap: 4px; overflow-x: auto; padding-bottom: 10px;
+      scrollbar-width: thin;
+    }
+    .tabs::-webkit-scrollbar { height: 6px; }
+    .tabs::-webkit-scrollbar-thumb { background: #2c4256; border-radius: 6px; }
+    .navbtn {
+      flex: 0 0 auto; background: transparent; color: var(--nav-ink);
+      border: 1px solid #2a3f52; border-radius: 999px; padding: 6px 13px;
+      font-size: 13px; cursor: pointer; white-space: nowrap; transition: all .15s;
+    }
+    .navbtn:hover { background: #1c3043; color: #fff; }
+    .navbtn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .navbtn .rk { opacity: .65; font-variant-numeric: tabular-nums; margin-right: 5px; }
+    /* ---- Layout ---- */
+    main { max-width: 1080px; margin: 0 auto; padding: 26px 16px 60px; }
+    .loc-section { display: none; animation: fade .25s ease; }
+    .loc-section.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    /* ---- Hero ---- */
+    .hero {
+      border-radius: 16px; padding: 26px 26px 24px; color: #fff; position: relative;
+      overflow: hidden; box-shadow: var(--shadow);
+      background: linear-gradient(135deg, #163a4d 0%, #1f7a8c 55%, #2aa1a8 100%);
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -40px; bottom: -60px; width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);
+    }
+    .hero .rank-badge {
+      display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 600; margin-bottom: 12px;
+    }
+    .hero h2 { margin: 0 0 4px; font-size: 30px; letter-spacing: -.5px; }
+    .hero .region { font-size: 14px; opacity: .9; margin-bottom: 14px; }
+    .hero .tagline { font-size: 15px; max-width: 660px; opacity: .96; position: relative; z-index: 1; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; position: relative; z-index: 1; }
+    .chip {
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 10px; padding: 7px 12px; font-size: 12.5px;
+    }
+    .chip b { display: block; font-size: 11px; font-weight: 600; opacity: .8; margin-bottom: 1px; text-transform: uppercase; letter-spacing: .4px; }
+    /* ---- Climbs ---- */
+    .sec-title { font-size: 14px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 30px 2px 14px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 16px 16px 12px; box-shadow: var(--shadow);
+    }
+    .card h3 { margin: 0 0 2px; font-size: 16.5px; }
+    .card .note { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .stat { background: #f1f5f9; border-radius: 8px; padding: 6px 10px; font-size: 12.5px; line-height: 1.25; }
+    .stat b { display: block; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .stat span { color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: .4px; }
+    .stat.hard b, .bigpct.hard { color: var(--prof-hard); }
+    .stat.mid b, .bigpct.mid { color: var(--prof-mid); }
+    .stat.easy b, .bigpct.easy { color: var(--prof-easy); }
+    svg.profile { width: 100%; height: auto; display: block; }
+    svg.profile .grid { stroke: #eef2f6; stroke-width: 1; }
+    svg.profile .ax { fill: #93a3b2; font-size: 10.5px; font-family: inherit; }
+    svg.profile .bigpct { font-size: 15px; font-weight: 700; font-family: inherit; }
+    /* ---- Übersicht ---- */
+    .intro { font-size: 15.5px; color: #34495a; max-width: 720px; }
+    table.rank { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13.5px; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    table.rank th, table.rank td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+    table.rank th { background: #eef3f8; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    table.rank tr:last-child td { border-bottom: none; }
+    table.rank tr { cursor: pointer; transition: background .12s; }
+    table.rank tbody tr:hover { background: #f3f8fc; }
+    table.rank td.r { font-weight: 700; color: var(--accent); }
+    .barchart { margin-top: 26px; }
+    .metric-btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+    .mbtn { background: var(--card); border: 1px solid var(--line); color: #34495a; border-radius: 999px; padding: 6px 13px; font-size: 12.5px; cursor: pointer; transition: all .15s; }
+    .mbtn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .mbtn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .metric-hint { font-size: 12.5px; color: var(--muted); margin: 0 2px 14px; min-height: 16px; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 58px; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .bar-row .lbl { font-size: 13px; text-align: right; color: #34495a; }
+    .bar-track { background: #e8eef4; border-radius: 6px; height: 18px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1f7a8c, #e8590c); }
+    .bar-row .val { font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin-top: 24px; }
+    .callout { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+    .callout b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin-bottom: 4px; }
+    .callout span { font-size: 14px; color: #34495a; }
+    footer { max-width: 1080px; margin: 0 auto; padding: 0 16px 50px; color: var(--muted); font-size: 12.5px; }
+    footer hr { border: none; border-top: 1px solid var(--line); margin: 0 0 16px; }
+    @media (max-width: 560px) {
+      .hero h2 { font-size: 24px; }
+      .bar-row { grid-template-columns: 110px 1fr 50px; }
+      .bar-row .lbl { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="mark">🚵</span>
+        <h1>Rennrad-Basislager Europa <span>· von brutal-alpin bis insular-mild</span></h1>
+      </div>
+      <nav class="tabs" id="tabs">
+        <button class="navbtn active" id="nav-overview" onclick="showLoc('overview')">Übersicht</button>
+        {locations.map((l) => (
+          <button class="navbtn" id={`nav-${l.id}`} onclick={`showLoc('${l.id}')`}>
+            <span class="rk">{l.rank}</span>{l.name}
+          </button>
+        ))}
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Übersicht -->
+    <section class="loc-section active" id="sec-overview">
+      <div class="hero" style="background: linear-gradient(135deg,#1a2f3d 0%,#e8590c 120%);">
+        <span class="rank-badge">10 Basislager · Stand Juni 2026</span>
+        <h2>Höhenmeter-Reviere für Endurance-Touren</h2>
+        <div class="region">Basis Berlin · Fokus Langstrecke &amp; Alpen-Höhenmeter</div>
+        <p class="tagline">Ausgangsorte, von denen aus sich sehr gute Touren mit ordentlich Höhenmetern fahren lassen — gerankt von der höchsten Pass-Dichte Europas bis zur milden Insel-Rampe. Oben in der Leiste durch die Orte schalten.</p>
+      </div>
+
+      <div class="sec-title">Ranking</div>
+      <table class="rank">
+        <thead>
+          <tr><th>Rang</th><th>Ort</th><th>Region</th><th>Basis</th><th>Charakter</th><th>Saison</th></tr>
+        </thead>
+        <tbody>
+          {locations.map((l) => (
+            <tr onclick={`showLoc('${l.id}')`}>
+              <td class="r">{l.rank}</td>
+              <td><b>{l.name}</b></td>
+              <td>{l.region}</td>
+              <td>{l.base} m</td>
+              <td>{l.character}</td>
+              <td>{l.season}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div class="sec-title">Vergleich der Basislager</div>
+      <div class="metric-btns" id="metric-btns">
+        <button class="mbtn active" data-metric="hm">Höchster Anstieg</button>
+        <button class="mbtn" data-metric="steep">Steilste Rampe</button>
+        <button class="mbtn" data-metric="alt">Höchster Pass</button>
+        <button class="mbtn" data-metric="fame">Bekanntheit ⭐</button>
+        <button class="mbtn" data-metric="speed">Anreise-Tempo ⭐</button>
+        <button class="mbtn" data-metric="daycost">Tageskosten</button>
+        <button class="mbtn" data-metric="travelcost">Anreisekosten</button>
+      </div>
+      <div class="metric-hint" id="metric-hint"></div>
+      <div class="barchart" id="barchart"></div>
+
+      <div class="callouts">
+        <div class="callout"><b>Maximale Höhenmeter</b><span>Bormio &gt; Bourg-d’Oisans &gt; Briançon</span></div>
+        <div class="callout"><b>Landschaftlich schönste</b><span>Corvara / Dolomiten</span></div>
+        <div class="callout"><b>Ganzjährig fahrbar</b><span>Mallorca (mild) &amp; La Palma (heftige Rampe)</span></div>
+        <div class="callout"><b>Schnell ab Berlin</b><span>Riesengebirge &amp; Harz fürs Wochenende</span></div>
+      </div>
+    </section>
+
+    <!-- Orte -->
+    {locations.map((l) => (
+      <section class="loc-section" id={`sec-${l.id}`}>
+        <div class="hero">
+          <span class="rank-badge">Rang {l.rank} · {l.character}</span>
+          <h2>{l.name}</h2>
+          <div class="region">{l.region} · Basis {l.base} m</div>
+          <p class="tagline">{l.tagline}</p>
+          <div class="chips">
+            <div class="chip"><b>Beste Saison</b>{l.season}</div>
+            <div class="chip"><b>Anreise ab Berlin</b>{l.travel}</div>
+            <div class="chip"><b>Tageskosten</b>{l.dayCost}</div>
+            <div class="chip"><b>Anstiege</b>{l.climbs.length} dokumentiert</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Top-Anstiege &amp; Höhenprofile</div>
+        <div class="grid">
+          {l.climbs.map((c, ci) => {
+            const a = avgPct(c);
+            const sc = steepClass(a);
+            return (
+              <div class="card">
+                <h3>{c.name}</h3>
+                <div class="note">{c.note}</div>
+                <div class="stats">
+                  <div class="stat"><b>{fmt(c.summit)} m</b><span>Gipfel</span></div>
+                  <div class="stat"><b>{c.length.toLocaleString('de-DE')} km</b><span>Länge</span></div>
+                  <div class="stat"><b>{fmt(c.hm)} Hm</b><span>Höhenmeter</span></div>
+                  <div class={`stat ${sc}`}><b>{pct(a)} %</b><span>Ø-Steigung</span></div>
+                  <div class="stat"><b>ca. {c.max} %</b><span>max.</span></div>
+                </div>
+                <Fragment set:html={profileSVG(c, `${l.id}-${ci}`)} />
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+  </main>
+
+  <footer>
+    <hr />
+    <p><b>Hinweis:</b> Höhen, Längen und Höhenmeter sind gängige Richtwerte (Stand Juni 2026). Die Ø-Steigung wird aus Höhenmeter/Länge berechnet; Max-Steigungen sind mit „ca." gekennzeichnete Näherungen. Die Höhenprofile sind stilisierte Darstellungen des Gesamtanstiegs, keine vermessenen GPX-Profile. Lebende Übersicht — wird laufend erweitert.</p>
+  </footer>
+
+  <script is:inline>
+    function showLoc(id) {
+      document.querySelectorAll('.loc-section').forEach((s) => s.classList.remove('active'));
+      var sec = document.getElementById('sec-' + id);
+      if (sec) sec.classList.add('active');
+      document.querySelectorAll('.navbtn').forEach((b) => b.classList.remove('active'));
+      var nav = document.getElementById('nav-' + id);
+      if (nav) {
+        nav.classList.add('active');
+        nav.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    /* --- Umschaltbares Vergleichs-Diagramm --- */
+    var CHART_DATA = [
+      { name: 'Bormio',                hm: 1530, steep: 18, alt: 2758, fame: 10, speed: 4,  daycost: 148, travelcost: 300 },
+      { name: "Bourg-d'Oisans",        hm: 1500, steep: 14, alt: 2642, fame: 10, speed: 3,  daycost: 140, travelcost: 375 },
+      { name: 'Briançon',              hm: 1490, steep: 13, alt: 2744, fame: 8,  speed: 3,  daycost: 133, travelcost: 355 },
+      { name: 'Corvara / Alta Badia',  hm: 920,  steep: 14, alt: 2244, fame: 9,  speed: 6,  daycost: 168, travelcost: 245 },
+      { name: 'Sölden / Ötztal',       hm: 1760, steep: 18, alt: 2474, fame: 7,  speed: 6,  daycost: 158, travelcost: 200 },
+      { name: 'Mallorca / Tramuntana', hm: 800,  steep: 12, alt: 880,  fame: 8,  speed: 8,  daycost: 135, travelcost: 220 },
+      { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  speed: 2,  daycost: 115, travelcost: 280 },
+      { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  speed: 7,  daycost: 145, travelcost: 200 },
+      { name: 'Špindlerův Mlýn',       hm: 480,  steep: 9,  alt: 1198, fame: 3,  speed: 9,  daycost: 103, travelcost: 100 },
+      { name: 'Braunlage / Harz',      hm: 480,  steep: 8,  alt: 850,  fame: 3,  speed: 10, daycost: 118, travelcost: 65 }
+    ];
+    function nf(n) { return n.toLocaleString('de-DE'); }
+    var METRICS = {
+      hm:         { lower: false, hint: 'Höhenmeter des größten Anstiegs am Ort',                                    fmt: function (v) { return nf(v) + ' Hm'; } },
+      steep:      { lower: false, hint: 'Maximale Steigung des steilsten Anstiegs',                                  fmt: function (v) { return v + ' %'; } },
+      alt:        { lower: false, hint: 'Gipfelhöhe des höchsten erreichbaren Passes',                               fmt: function (v) { return nf(v) + ' m'; } },
+      fame:       { lower: false, hint: 'Subjektive Einschätzung, wie legendär die Pässe sind (0–10 ⭐)',            fmt: function (v) { return v + ' / 10 ⭐'; } },
+      speed:      { lower: false, hint: 'Wie schnell man ab Berlin vor Ort ist (0–10 ⭐, 10 = sehr schnell)',        fmt: function (v) { return v + ' / 10 ⭐'; } },
+      daycost:    { lower: true,  hint: 'Mittelklasse-Hotel + Verpflegung, Richtwert — weniger = günstiger',         fmt: function (v) { return '~' + v + ' €/Tag'; } },
+      travelcost: { lower: true,  hint: 'Günstigste sinnvolle Anreise hin & zurück inkl. Radtransport — weniger = günstiger', fmt: function (v) { return '~' + nf(v) + ' €'; } }
+    };
+    function renderChart(key) {
+      var m = METRICS[key];
+      var rows = CHART_DATA.slice().sort(function (a, b) { return m.lower ? a[key] - b[key] : b[key] - a[key]; });
+      var maxv = Math.max.apply(null, CHART_DATA.map(function (d) { return d[key]; }));
+      var html = rows.map(function (d) {
+        var w = Math.max(4, Math.round((d[key] / maxv) * 100));
+        return '<div class="bar-row"><div class="lbl">' + d.name + '</div>' +
+               '<div class="bar-track"><div class="bar-fill" style="width:' + w + '%"></div></div>' +
+               '<div class="val">' + m.fmt(d[key]) + '</div></div>';
+      }).join('');
+      document.getElementById('barchart').innerHTML = html;
+      document.getElementById('metric-hint').textContent = m.hint;
+      document.querySelectorAll('.mbtn').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-metric') === key);
+      });
+    }
+    document.querySelectorAll('.mbtn').forEach(function (b) {
+      b.addEventListener('click', function () { renderChart(b.getAttribute('data-metric')); });
+    });
+    renderChart('hm');
+
+  </script>
+</body>
+</html>
