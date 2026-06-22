@@ -134,6 +134,40 @@ const pct = (x) => x.toFixed(1).replace('.', ',');
 const avgPct = (c) => (c.hm / (c.length * 10));
 const steepClass = (a) => (a < 6 ? 'easy' : a < 8 ? 'mid' : 'hard');
 
+// quäldich.de-Profile pro Anstieg (Schlüssel = climb.name)
+const QD = {
+  'Stilfser Joch': 'https://www.quaeldich.de/paesse/stilfser-joch/',
+  'Passo di Gavia': 'https://www.quaeldich.de/paesse/passo-di-gavia/',
+  'Mortirolo': 'https://www.quaeldich.de/paesse/passo-del-mortirolo/',
+  'Umbrailpass': 'https://www.quaeldich.de/paesse/umbrailpass/',
+  "Alpe d'Huez": 'https://www.quaeldich.de/paesse/alpe-d-huez/',
+  'Col du Galibier (Lautaret-Seite)': 'https://www.quaeldich.de/paesse/col-du-galibier/',
+  'Col de la Croix de Fer': 'https://www.quaeldich.de/paesse/col-de-la-croix-de-fer/',
+  'Col du Sabot': 'https://www.quaeldich.de/paesse/col-du-sabot/',
+  "Col d'Izoard": 'https://www.quaeldich.de/paesse/col-d-izoard/',
+  "Col d'Agnel": 'https://www.quaeldich.de/paesse/col-agnel/',
+  'Col du Granon': 'https://www.quaeldich.de/paesse/col-de-granon/',
+  'Passo Giau': 'https://www.quaeldich.de/paesse/passo-di-giau/',
+  'Passo Pordoi': 'https://www.quaeldich.de/paesse/passo-pordoi/',
+  'Passo Gardena': 'https://www.quaeldich.de/paesse/groednerjoch/',
+  'Passo Sella': 'https://www.quaeldich.de/paesse/sellajoch/',
+  'Passo Falzarego': 'https://www.quaeldich.de/paesse/passo-di-falzarego/',
+  'Passo Campolongo': 'https://www.quaeldich.de/paesse/passo-campolongo/',
+  'Timmelsjoch (ab Sölden)': 'https://www.quaeldich.de/paesse/timmelsjoch/',
+  'Kühtai (Sellraintal)': 'https://www.quaeldich.de/paesse/kuehtaisattel/',
+  'Jaufenpass': 'https://www.quaeldich.de/paesse/jaufenpass/',
+  'Sa Calobra (Coll dels Reis)': 'https://www.quaeldich.de/paesse/coll-dels-reis/',
+  'Puig Major (Sóller-Seite)': 'https://www.quaeldich.de/paesse/coll-de-puig-major/',
+  'Coll de Sóller': 'https://www.quaeldich.de/paesse/coll-de-soller/',
+  'Roque de los Muchachos': 'https://www.quaeldich.de/paesse/roque-de-los-muchachos/',
+  'Rocacorba': 'https://www.quaeldich.de/paesse/rocacorba/',
+  'Mare de Déu del Mont': 'https://www.quaeldich.de/paesse/santuari-de-la-mare-de-deu-del-mont/',
+  'Els Àngels': 'https://www.quaeldich.de/paesse/santuari-de-la-mare-de-deu-dels-angels/',
+  'Špindlerova bouda': 'https://www.quaeldich.de/paesse/spindlerpass/',
+  'Torfhaus (ab Bad Harzburg)': 'https://www.quaeldich.de/paesse/torfhaus/',
+  'Sonnenberg': 'https://www.quaeldich.de/paesse/sonnenberg-harz/'
+};
+
 // SVG-Höhenprofil für einen Anstieg
 function profileSVG(c, uid) {
   const W = 460, H = 168, padL = 50, padR = 18, padT = 18, padB = 30;
@@ -270,6 +304,8 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
     .stat.mid b, .bigpct.mid { color: var(--prof-mid); }
     .stat.easy b, .bigpct.easy { color: var(--prof-easy); }
     svg.profile { width: 100%; height: auto; display: block; }
+    .card .qd { display: inline-block; margin-top: 10px; font-size: 12.5px; color: var(--accent2); text-decoration: none; font-weight: 600; }
+    .card .qd:hover { text-decoration: underline; }
     svg.profile .grid { stroke: #eef2f6; stroke-width: 1; }
     svg.profile .ax { fill: #93a3b2; font-size: 10.5px; font-family: inherit; }
     svg.profile .bigpct { font-size: 15px; font-weight: 700; font-family: inherit; }
@@ -407,6 +443,7 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
                   <div class="stat"><b>ca. {c.max} %</b><span>max.</span></div>
                 </div>
                 <Fragment set:html={profileSVG(c, `${l.id}-${ci}`)} />
+                <a class="qd" href={QD[c.name]} target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
             );
           })}
