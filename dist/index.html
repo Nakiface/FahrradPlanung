@@ -254,7 +254,7 @@
         <button class="mbtn" data-metric="steep">Steilste Rampe</button>
         <button class="mbtn" data-metric="alt">Höchster Pass</button>
         <button class="mbtn" data-metric="fame">Bekanntheit ⭐</button>
-        <button class="mbtn" data-metric="speed">Anreise-Tempo ⭐</button>
+        <button class="mbtn" data-metric="travelh">Anreisedauer</button>
         <button class="mbtn" data-metric="daycost">Tageskosten</button>
         <button class="mbtn" data-metric="travelcost">Anreisekosten</button>
       </div>
@@ -1283,16 +1283,16 @@
     }
     /* --- Umschaltbares Vergleichs-Diagramm --- */
     var CHART_DATA = [
-      { name: 'Bormio',                hm: 1530, steep: 18, alt: 2758, fame: 10, speed: 4,  daycost: 148, travelcost: 300 },
-      { name: "Bourg-d'Oisans",        hm: 1500, steep: 14, alt: 2642, fame: 10, speed: 3,  daycost: 140, travelcost: 375 },
-      { name: 'Briançon',              hm: 1490, steep: 13, alt: 2744, fame: 8,  speed: 3,  daycost: 133, travelcost: 355 },
-      { name: 'Corvara / Alta Badia',  hm: 920,  steep: 14, alt: 2244, fame: 9,  speed: 6,  daycost: 168, travelcost: 245 },
-      { name: 'Sölden / Ötztal',       hm: 1760, steep: 18, alt: 2474, fame: 7,  speed: 6,  daycost: 158, travelcost: 200 },
-      { name: 'Mallorca / Tramuntana', hm: 800,  steep: 12, alt: 880,  fame: 8,  speed: 8,  daycost: 135, travelcost: 220 },
-      { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  speed: 2,  daycost: 115, travelcost: 280 },
-      { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  speed: 7,  daycost: 145, travelcost: 200 },
-      { name: 'Špindlerův Mlýn',       hm: 480,  steep: 9,  alt: 1198, fame: 3,  speed: 9,  daycost: 103, travelcost: 100 },
-      { name: 'Braunlage / Harz',      hm: 480,  steep: 8,  alt: 850,  fame: 3,  speed: 10, daycost: 118, travelcost: 65 }
+      { name: 'Bormio',                hm: 1530, steep: 18, alt: 2758, fame: 10, travelh: 10.5,  daycost: 148, travelcost: 300 },
+      { name: "Bourg-d'Oisans",        hm: 1500, steep: 14, alt: 2642, fame: 10, travelh: 11.5,  daycost: 140, travelcost: 375 },
+      { name: 'Briançon',              hm: 1490, steep: 13, alt: 2744, fame: 8,  travelh: 11.5,  daycost: 133, travelcost: 355 },
+      { name: 'Corvara / Alta Badia',  hm: 920,  steep: 14, alt: 2244, fame: 9,  travelh: 9,  daycost: 168, travelcost: 245 },
+      { name: 'Sölden / Ötztal',       hm: 1760, steep: 18, alt: 2474, fame: 7,  travelh: 8.5,  daycost: 158, travelcost: 200 },
+      { name: 'Mallorca / Tramuntana', hm: 800,  steep: 12, alt: 880,  fame: 8,  travelh: 6,  daycost: 135, travelcost: 220 },
+      { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  travelh: 10,  daycost: 115, travelcost: 280 },
+      { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  travelh: 6.5,  daycost: 145, travelcost: 200 },
+      { name: 'Špindlerův Mlýn',       hm: 480,  steep: 9,  alt: 1198, fame: 3,  travelh: 4,  daycost: 103, travelcost: 100 },
+      { name: 'Braunlage / Harz',      hm: 480,  steep: 8,  alt: 850,  fame: 3,  travelh: 3, daycost: 118, travelcost: 65 }
     ];
     function nf(n) { return n.toLocaleString('de-DE'); }
     var METRICS = {
@@ -1300,7 +1300,7 @@
       steep:      { lower: false, hint: 'Maximale Steigung des steilsten Anstiegs',                                  fmt: function (v) { return v + ' %'; } },
       alt:        { lower: false, hint: 'Gipfelhöhe des höchsten erreichbaren Passes',                               fmt: function (v) { return nf(v) + ' m'; } },
       fame:       { lower: false, hint: 'Subjektive Einschätzung, wie legendär die Pässe sind (0–10 ⭐)',            fmt: function (v) { return v + ' / 10 ⭐'; } },
-      speed:      { lower: false, hint: 'Wie schnell man ab Berlin vor Ort ist (0–10 ⭐, 10 = sehr schnell)',        fmt: function (v) { return v + ' / 10 ⭐'; } },
+      travelh:    { lower: true,  hint: 'Realistische Gesamt-Anreisezeit ab Berlin (Tür zu Tür) — weniger = schneller',          fmt: function (v) { return ('' + v).replace('.', ',') + ' h'; } },
       daycost:    { lower: true,  hint: 'Mittelklasse-Hotel + Verpflegung, Richtwert — weniger = günstiger',         fmt: function (v) { return '~' + v + ' €/Tag'; } },
       travelcost: { lower: true,  hint: 'Günstigste sinnvolle Anreise hin & zurück inkl. Radtransport — weniger = günstiger', fmt: function (v) { return '~' + nf(v) + ' €'; } }
     };
