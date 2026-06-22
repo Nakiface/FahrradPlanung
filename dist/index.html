@@ -31,11 +31,26 @@
     .brand h1 { font-size: 16px; margin: 0; color: #fff; font-weight: 700; letter-spacing: .2px; }
     .brand span { color: #7fa3bd; font-size: 12.5px; margin-left: 2px; }
     .tabs {
-      display: flex; gap: 4px; overflow-x: auto; padding-bottom: 10px;
-      scrollbar-width: thin;
+      display: flex; gap: 6px; overflow: visible; padding-bottom: 10px; align-items: center;
     }
-    .tabs::-webkit-scrollbar { height: 6px; }
-    .tabs::-webkit-scrollbar-thumb { background: #2c4256; border-radius: 6px; }
+    .details-wrap { position: relative; }
+    .menu {
+      position: absolute; top: calc(100% + 6px); left: 0; background: #fff;
+      border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 34px rgba(10,25,40,.24);
+      padding: 6px; min-width: 250px; max-height: 72vh; overflow-y: auto; display: none; z-index: 60;
+    }
+    .menu.open { display: block; }
+    .menu-item {
+      display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+      background: transparent; border: none; border-radius: 8px; padding: 9px 12px;
+      font-size: 14px; color: var(--ink); cursor: pointer;
+    }
+    .menu-item:hover { background: #f1f6fb; }
+    .menu-item.active { background: var(--accent); color: #fff; }
+    .menu-item .rk { opacity: .55; font-variant-numeric: tabular-nums; min-width: 18px; }
+    .menu-item.active .rk { opacity: .85; }
+    .burger { font-size: 15px; line-height: 1; margin-right: 2px; }
+    #det-label { opacity: .9; font-weight: 600; }
     .navbtn {
       flex: 0 0 auto; background: transparent; color: var(--nav-ink);
       border: 1px solid #2a3f52; border-radius: 999px; padding: 6px 13px;
@@ -138,28 +153,33 @@
         <h1>Rennrad-Basislager Europa <span>· von brutal-alpin bis insular-mild</span></h1>
       </div>
       <nav class="tabs" id="tabs">
-        <button class="navbtn active" id="nav-overview" onclick="showLoc('overview')">Übersicht</button>
-        <button class="navbtn" id="nav-bormio" onclick="showLoc('bormio')">
-            <span class="rk">1</span>Bormio
-          </button><button class="navbtn" id="nav-bourg" onclick="showLoc('bourg')">
-            <span class="rk">2</span>Bourg-d&#39;Oisans
-          </button><button class="navbtn" id="nav-briancon" onclick="showLoc('briancon')">
-            <span class="rk">3</span>Briançon
-          </button><button class="navbtn" id="nav-corvara" onclick="showLoc('corvara')">
-            <span class="rk">4</span>Corvara / Alta Badia
-          </button><button class="navbtn" id="nav-soelden" onclick="showLoc('soelden')">
-            <span class="rk">5</span>Sölden / Ötztal
-          </button><button class="navbtn" id="nav-mallorca" onclick="showLoc('mallorca')">
-            <span class="rk">6</span>Mallorca / Tramuntana
-          </button><button class="navbtn" id="nav-lapalma" onclick="showLoc('lapalma')">
-            <span class="rk">7</span>La Palma
-          </button><button class="navbtn" id="nav-girona" onclick="showLoc('girona')">
-            <span class="rk">8</span>Girona
-          </button><button class="navbtn" id="nav-spindleruv" onclick="showLoc('spindleruv')">
-            <span class="rk">9</span>Špindlerův Mlýn
-          </button><button class="navbtn" id="nav-harz" onclick="showLoc('harz')">
-            <span class="rk">10</span>Braunlage / Harz
-          </button>
+        <button class="navbtn active" id="nav-overview" onclick="showOverview()">Übersicht</button>
+        <div class="details-wrap">
+          <button class="navbtn" id="nav-details" onclick="toggleMenu(event)" aria-haspopup="true"><span class="burger">☰</span> Details<span id="det-label"></span></button>
+          <div class="menu" id="region-menu" role="menu">
+            <button class="menu-item" data-id="bormio" data-name="Bormio" onclick="selectRegion('bormio')" role="menuitem">
+                <span class="rk">1</span>Bormio
+              </button><button class="menu-item" data-id="bourg" data-name="Bourg-d'Oisans" onclick="selectRegion('bourg')" role="menuitem">
+                <span class="rk">2</span>Bourg-d&#39;Oisans
+              </button><button class="menu-item" data-id="briancon" data-name="Briançon" onclick="selectRegion('briancon')" role="menuitem">
+                <span class="rk">3</span>Briançon
+              </button><button class="menu-item" data-id="corvara" data-name="Corvara / Alta Badia" onclick="selectRegion('corvara')" role="menuitem">
+                <span class="rk">4</span>Corvara / Alta Badia
+              </button><button class="menu-item" data-id="soelden" data-name="Sölden / Ötztal" onclick="selectRegion('soelden')" role="menuitem">
+                <span class="rk">5</span>Sölden / Ötztal
+              </button><button class="menu-item" data-id="mallorca" data-name="Mallorca / Tramuntana" onclick="selectRegion('mallorca')" role="menuitem">
+                <span class="rk">6</span>Mallorca / Tramuntana
+              </button><button class="menu-item" data-id="lapalma" data-name="La Palma" onclick="selectRegion('lapalma')" role="menuitem">
+                <span class="rk">7</span>La Palma
+              </button><button class="menu-item" data-id="girona" data-name="Girona" onclick="selectRegion('girona')" role="menuitem">
+                <span class="rk">8</span>Girona
+              </button><button class="menu-item" data-id="spindleruv" data-name="Špindlerův Mlýn" onclick="selectRegion('spindleruv')" role="menuitem">
+                <span class="rk">9</span>Špindlerův Mlýn
+              </button><button class="menu-item" data-id="harz" data-name="Braunlage / Harz" onclick="selectRegion('harz')" role="menuitem">
+                <span class="rk">10</span>Braunlage / Harz
+              </button>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -859,18 +879,36 @@
   </footer>
 
   <script>
-    function showLoc(id) {
+    function setSection(id) {
       document.querySelectorAll('.loc-section').forEach((s) => s.classList.remove('active'));
       var sec = document.getElementById('sec-' + id);
       if (sec) sec.classList.add('active');
-      document.querySelectorAll('.navbtn').forEach((b) => b.classList.remove('active'));
-      var nav = document.getElementById('nav-' + id);
-      if (nav) {
-        nav.classList.add('active');
-        nav.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    function closeMenu() { var m = document.getElementById('region-menu'); if (m) m.classList.remove('open'); }
+    function toggleMenu(e) { if (e) e.stopPropagation(); var m = document.getElementById('region-menu'); if (m) m.classList.toggle('open'); }
+    function showOverview() {
+      setSection('overview');
+      document.getElementById('nav-details').classList.remove('active');
+      document.getElementById('nav-overview').classList.add('active');
+      var lbl = document.getElementById('det-label'); if (lbl) lbl.textContent = '';
+      document.querySelectorAll('.menu-item').forEach((b) => b.classList.remove('active'));
+      closeMenu();
+    }
+    function selectRegion(id) {
+      var item = document.querySelector('.menu-item[data-id="' + id + '"]');
+      setSection(id);
+      document.getElementById('nav-overview').classList.remove('active');
+      document.getElementById('nav-details').classList.add('active');
+      var lbl = document.getElementById('det-label'); if (lbl) lbl.textContent = item ? ' · ' + item.getAttribute('data-name') : '';
+      document.querySelectorAll('.menu-item').forEach((b) => b.classList.toggle('active', b.getAttribute('data-id') === id));
+      closeMenu();
+    }
+    function showLoc(id) { if (id === 'overview') showOverview(); else selectRegion(id); }
+    document.addEventListener('click', function (e) {
+      var w = document.querySelector('.details-wrap');
+      if (w && !w.contains(e.target)) closeMenu();
+    });
     /* --- Umschaltbares Vergleichs-Diagramm --- */
     var CHART_DATA = [
       { name: 'Bormio',                hm: 1530, steep: 18, alt: 2758, fame: 10, travelh: 10.5,  daycost: 148, travelcost: 300 },
