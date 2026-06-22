@@ -120,8 +120,10 @@ const locations = [
     character: 'Heimrunde, Trainings-Wochenende',
     season: 'April – Oktober', travel: 'Auto ~3 h ab Berlin',
     dayCost: '~95–140 €/Tag',
-    tagline: 'Die Heimrunde: dauerwelliges Profil mit ausreichend langen Anstiegen für ein schnelles, günstiges Trainingswochenende. Brocken-Gipfel gesperrt, Torfhaus als Ziel.',
+    tagline: 'Die Heimrunde: dauerwelliges Profil mit ausreichend langen Anstiegen für ein schnelles, günstiges Trainingswochenende. Der Brocken ist über die autofreie Brockenstraße ab Schierke mit dem Rad fahrbar – das Highlight der Region.',
     climbs: [
+      { name: 'Brocken (Brockenstraße ab Schierke)', summit: 1142, length: 11.5, hm: 530, max: 12, note: 'für Kfz gesperrt, für Räder frei – unten Top-Asphalt, oben ruppig' },
+      { name: 'Wurmberg (ab Braunlage)', summit: 937, length: 5, hm: 372, max: 18, note: 'kurze steile Rampe; letzte ~500 m Schotter, nicht rennradtauglich' },
       { name: 'Torfhaus (ab Bad Harzburg)', summit: 800, length: 13, hm: 480, max: 8, note: 'klassischer Harz-Anstieg an der B4' },
       { name: 'Sonnenberg', summit: 850, length: 9, hm: 360, max: 8, note: 'ruhige Oberharz-Auffahrt' },
     ],
@@ -165,6 +167,8 @@ const QD = {
   'Els Àngels': 'https://www.quaeldich.de/paesse/santuari-de-la-mare-de-deu-dels-angels/',
   'Špindlerova bouda': 'https://www.quaeldich.de/paesse/spindlerpass/',
   'Torfhaus (ab Bad Harzburg)': 'https://www.quaeldich.de/paesse/torfhaus/',
+  'Brocken (Brockenstraße ab Schierke)': 'https://www.quaeldich.de/paesse/brocken/',
+  'Wurmberg (ab Braunlage)': 'https://www.quaeldich.de/paesse/wurmberg/',
   'Sonnenberg': 'https://www.quaeldich.de/paesse/sonnenberg-harz/'
 };
 
@@ -537,7 +541,7 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
       { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  travelh: 10,  daycost: 115, travelcost: 280 },
       { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  travelh: 6.5,  daycost: 145, travelcost: 200 },
       { name: 'Špindlerův Mlýn',       hm: 480,  steep: 9,  alt: 1198, fame: 3,  travelh: 4,  daycost: 103, travelcost: 100 },
-      { name: 'Braunlage / Harz',      hm: 480,  steep: 8,  alt: 850,  fame: 3,  travelh: 3, daycost: 118, travelcost: 65 }
+      { name: 'Braunlage / Harz',      hm: 530,  steep: 18, alt: 1142,  fame: 3,  travelh: 3, daycost: 118, travelcost: 65 }
     ];
     function nf(n) { return n.toLocaleString('de-DE'); }
     var METRICS = {
