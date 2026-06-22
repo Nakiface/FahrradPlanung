@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bormio – Profil-Varianten im Vergleich</title>
+<style>
+  :root {
+    --ink:#16212e; --muted:#5d6e7e; --line:#e4eaf0; --bg:#f5f8fb; --card:#fff;
+    --accent:#e8590c; --accent2:#1f7a8c;
+    --c1:#1f9d8f; --c2:#7bb33a; --c3:#e8990c; --c4:#e8590c; --c5:#e0431f; --c6:#b32114;
+    --shadow:0 1px 3px rgba(20,40,60,.07),0 8px 28px rgba(20,40,60,.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 16px 70px;}
+  .hero{border-radius:16px;padding:24px 26px;color:#fff;background:linear-gradient(135deg,#163a4d,#1f7a8c 60%,#2aa1a8);box-shadow:var(--shadow);margin-bottom:8px;}
+  .hero h1{margin:0 0 4px;font-size:26px;}
+  .hero p{margin:0;opacity:.95;font-size:14.5px;max-width:640px;}
+  .lead{font-size:14.5px;color:#34495a;margin:18px 2px 22px;}
+  .climb{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px;margin-bottom:22px;box-shadow:var(--shadow);}
+  .climb h2{margin:0 0 2px;font-size:19px;}
+  .climb .meta{color:var(--muted);font-size:13px;margin-bottom:6px;}
+  .opt{border-top:1px dashed var(--line);padding-top:14px;margin-top:14px;}
+  .opt:first-of-type{border-top:none;}
+  .otag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--accent2);border-radius:6px;padding:3px 9px;margin-bottom:8px;}
+  .otag.o1{background:var(--accent2);} .otag.o2{background:#3a6ea5;} .otag.o3{background:#8a8f99;}
+  .otitle{font-size:13.5px;color:var(--muted);margin:0 0 10px;}
+  svg.prof{width:100%;height:auto;display:block;}
+  svg.prof .ax{fill:#93a3b2;font-size:10.5px;font-family:inherit;}
+  svg.prof .grid{stroke:#eef2f6;stroke-width:1;}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:11.5px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .sw{width:13px;height:9px;border-radius:2px;display:inline-block;}
+  .qbtn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14px;border-radius:10px;padding:11px 18px;box-shadow:var(--shadow);}
+  .qbtn:hover{background:#cf4d09;}
+  .o3frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fafcfe;}
+  .o3frame iframe{width:100%;height:320px;border:0;display:block;}
+  .caveat{font-size:12.5px;color:#8a4b12;background:#fff6ee;border:1px solid #f3d9c2;border-radius:8px;padding:9px 12px;margin-top:10px;}
+  .caveat b{color:#a4480c;}
+  footer{color:var(--muted);font-size:12.5px;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>Bormio – drei Profil-Varianten</h1>
+    <p>Zum Vergleichen: für jeden der vier Bormio-Anstiege siehst du Option 1, 2 und 3 untereinander. Sag mir danach, welche ich für die ganze Seite übernehmen soll.</p>
+  </div>
+  <p class="lead">
+    <b>Option 1</b> – eigenes, datengenaues Profil (km-für-km nach Steigung eingefärbt, von mir gezeichnet, offline-fähig, rechtlich sauber).
+    <b>Option 2</b> – Button zur echten quäldich-Profilseite (öffnet im Browser).
+    <b>Option 3</b> – die quäldich-Seite live eingebettet (zeigt zugleich die Nachteile: lädt nur online, fremdes Copyright, kann von quäldich blockiert werden).
+  </p>
+
+  <div id="root"></div>
+
+  <footer>Steigungsdaten in Option 1 sind realistische km-Richtwerte (Stand Juni 2026), keine vermessenen GPX-Profile.</footer>
+</div>
+
+<script>
+  // Anstieg: base = Starthöhe (m), segs = Ø-Steigung je km (%), qd = quäldich-URL
+  var CLIMBS = [
+    { name:'Stilfser Joch', side:'Bormio-Seite · 21,5 km · 1.533 Hm · Ø 7,1 %', base:1225,
+      qd:'https://www.quaeldich.de/paesse/stilfser-joch/',
+      segs:[7,8,8,7,6,7,8,8,7,5,6,7,8,8,8,7,7,8,8,8,7,6] },
+    { name:'Passo di Gavia', side:'Bormio-Seite · 25 km · 1.404 Hm · Ø 5,6 %', base:1217,
+      qd:'https://www.quaeldich.de/paesse/passo-di-gavia/',
+      segs:[3,4,3,4,4,3,4,5,4,4,5,6,5,9,10,11,8,9,10,11,9,8,7,8,6] },
+    { name:'Mortirolo', side:'Mazzo-Seite · 12,4 km · 1.300 Hm · Ø 10,5 %', base:552,
+      qd:'https://www.quaeldich.de/paesse/passo-del-mortirolo/',
+      segs:[9,11,13,12,11,16,10,8,12,13,11,10,9] },
+    { name:'Umbrailpass', side:'Santa-Maria-Seite · 13 km · 1.100 Hm · Ø 8,5 %', base:1403,
+      qd:'https://www.quaeldich.de/paesse/umbrailpass/',
+      segs:[9,8,9,10,8,8,9,9,8,7,8,9,10] }
+  ];
+
+  function segColor(g){
+    if(g<5) return 'var(--c1)';
+    if(g<7) return 'var(--c2)';
+    if(g<9) return 'var(--c3)';
+    if(g<11) return 'var(--c4)';
+    if(g<14) return 'var(--c5)';
+    return 'var(--c6)';
+  }
+
+  // Datengenaues Profil: km-Segmente, eingefärbt nach Steigung
+  function profileSVG(c){
+    var W=820,H=240,padL=58,padR=18,padT=18,padB=34;
+    var innerW=W-padL-padR, innerH=H-padT-padB;
+    var n=c.segs.length;
+    // kumulierte Höhe
+    var elev=[c.base], i;
+    for(i=0;i<n;i++){ elev.push(elev[i]+c.segs[i]*10); }
+    var top=elev[n], minE=c.base, range=top-minE||1;
+    var x=function(k){ return padL + (k/n)*innerW; };
+    var y=function(e){ return padT + (1-(e-minE)/range)*innerH; };
+    var baseY=padT+innerH;
+    var svg='<svg class="prof" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Profil '+c.name+'">';
+    // grid
+    [0.25,0.5,0.75,1].forEach(function(g){ var yy=padT+g*innerH; svg+='<line class="grid" x1="'+padL+'" y1="'+yy+'" x2="'+(padL+innerW)+'" y2="'+yy+'"/>'; });
+    // Segmente als eingefärbte Trapeze
+    for(i=0;i<n;i++){
+      var x0=x(i),x1=x(i+1),y0=y(elev[i]),y1=y(elev[i+1]);
+      svg+='<path d="M'+x0.toFixed(1)+' '+baseY+' L'+x0.toFixed(1)+' '+y0.toFixed(1)+' L'+x1.toFixed(1)+' '+y1.toFixed(1)+' L'+x1.toFixed(1)+' '+baseY+' Z" fill="'+segColor(c.segs[i])+'" fill-opacity="0.85"/>';
+    }
+    // Topline
+    var line='';
+    for(i=0;i<=n;i++){ line+=(i?'L':'M')+x(i).toFixed(1)+' '+y(elev[i]).toFixed(1)+' '; }
+    svg+='<path d="'+line+'" fill="none" stroke="#16212e" stroke-width="1.5" stroke-opacity="0.55"/>';
+    // Achsen
+    svg+='<text class="ax" x="'+(padL-6)+'" y="'+(padT+4)+'" text-anchor="end">'+top.toLocaleString('de-DE')+' m</text>';
+    svg+='<text class="ax" x="'+(padL-6)+'" y="'+baseY+'" text-anchor="end">'+minE.toLocaleString('de-DE')+' m</text>';
+    svg+='<text class="ax" x="'+padL+'" y="'+(H-10)+'" text-anchor="start">0 km</text>';
+    svg+='<text class="ax" x="'+(padL+innerW)+'" y="'+(H-10)+'" text-anchor="end">'+n+' km</text>';
+    svg+='</svg>';
+    return svg;
+  }
+
+  var legendHTML='<div class="legend">'
+    +'<span><i class="sw" style="background:var(--c1)"></i>&lt;5%</span>'
+    +'<span><i class="sw" style="background:var(--c2)"></i>5–7%</span>'
+    +'<span><i class="sw" style="background:var(--c3)"></i>7–9%</span>'
+    +'<span><i class="sw" style="background:var(--c4)"></i>9–11%</span>'
+    +'<span><i class="sw" style="background:var(--c5)"></i>11–14%</span>'
+    +'<span><i class="sw" style="background:var(--c6)"></i>&gt;14%</span>'
+    +'</div>';
+
+  var root=document.getElementById('root');
+  root.innerHTML = CLIMBS.map(function(c){
+    return '<div class="climb">'
+      + '<h2>'+c.name+'</h2><div class="meta">'+c.side+'</div>'
+      + '<div class="opt"><span class="otag o1">Option 1</span><div class="otitle">Eigenes datengenaues Profil (km-für-km nach Steigung eingefärbt)</div>'
+        + profileSVG(c) + legendHTML + '</div>'
+      + '<div class="opt"><span class="otag o2">Option 2</span><div class="otitle">Button zur echten quäldich-Profilseite</div>'
+        + '<a class="qbtn" href="'+c.qd+'" target="_blank" rel="noopener">Profil von '+c.name+' auf quäldich ansehen ↗</a></div>'
+      + '<div class="opt"><span class="otag o3">Option 3</span><div class="otitle">quäldich-Seite live eingebettet</div>'
+        + '<div class="o3frame"><iframe src="'+c.qd+'" loading="lazy" referrerpolicy="no-referrer"></iframe></div>'
+        + '<div class="caveat"><b>Nachteile von Option 3:</b> lädt nur mit Internet, bettet quäldichs urheberrechtlich geschütztes Material ein und bleibt oft leer, weil quäldich das Einbetten (iframe/Hotlink) in der Regel sperrt.</div></div>'
+      + '</div>';
+  }).join('');
+</script>
+</body>
+</html>
