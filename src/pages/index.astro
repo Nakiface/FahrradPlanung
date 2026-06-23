@@ -72,7 +72,20 @@ const locations = [
     ],
   },
   {
-    id: 'mallorca', rank: 6, name: 'Mallorca / Tramuntana', region: 'ES · Balearen', base: 5,
+    id: 'kranjska', rank: 6, name: 'Kranjska Gora', region: 'SI · Julische Alpen', base: 810,
+    character: 'Vršič & Mangart – hochalpin, Triglav-Nationalpark',
+    season: 'Juni – September', travel: 'Auto ~9–10 h · Flug Ljubljana/Klagenfurt',
+    dayCost: '~95–140 €/Tag',
+    tagline: 'Höchster Straßenpass Sloweniens (Vršič) direkt vor der Tür, mit dem Mangart die höchste Straße des Landes. Königsetappe über Vršič–Trenta–Predel mit bis zu ~2.800 Hm.',
+    climbs: [
+      { name: 'Vršič (ab Kranjska Gora)', summit: 1611, length: 10.3, hm: 749, max: 12, note: '50 Kehren, „Russische Straße“' },
+      { name: 'Mangart (Mangrt, 2.055 m)', summit: 2055, length: 12, hm: 960, max: 16, note: 'höchste Straße Sloweniens, Tunnel; via Bovec' },
+      { name: 'Predel (Passo del Predil)', summit: 1156, length: 5, hm: 400, max: 12, note: 'Grenzpass, Abzweig zur Mangart-Straße' },
+      { name: 'Wurzenpass (Korensko sedlo)', summit: 1073, length: 7.5, hm: 620, max: 18, note: 'berüchtigte Steilrampe bis ~18 %' },
+    ],
+  },
+  {
+    id: 'mallorca', rank: 7, name: 'Mallorca / Tramuntana', region: 'ES · Balearen', base: 5,
     character: 'Lange gleichmäßige Anstiege, mild',
     season: 'ganzjährig · ideal Feb–Apr / Okt–Nov', travel: 'Direktflug BER–Palma ~2 h 45',
     dayCost: '~105–165 €/Tag',
@@ -84,7 +97,7 @@ const locations = [
     ],
   },
   {
-    id: 'lapalma', rank: 7, name: 'La Palma', region: 'ES · Kanaren', base: 0,
+    id: 'lapalma', rank: 8, name: 'La Palma', region: 'ES · Kanaren', base: 0,
     character: 'Längster Anstieg am Stück – heftige Rampe',
     season: 'ganzjährig', travel: 'Flug via Madrid/Teneriffa',
     dayCost: '~90–140 €/Tag',
@@ -94,7 +107,7 @@ const locations = [
     ],
   },
   {
-    id: 'girona', rank: 8, name: 'Girona', region: 'ES · Katalonien', base: 70,
+    id: 'girona', rank: 9, name: 'Girona', region: 'ES · Katalonien', base: 70,
     character: 'Profi-Hotspot, mediterran, vielseitig',
     season: 'März – November', travel: 'Flug BER–Barcelona/Girona ~2,5 h',
     dayCost: '~115–175 €/Tag',
@@ -106,7 +119,7 @@ const locations = [
     ],
   },
   {
-    id: 'spindleruv', rank: 9, name: 'Špindlerův Mlýn', region: 'CZ · Riesengebirge', base: 715,
+    id: 'spindleruv', rank: 10, name: 'Špindlerův Mlýn', region: 'CZ · Riesengebirge', base: 715,
     character: 'Mittelgebirgs-Rampen, schnell ab Berlin',
     season: 'Mai – Oktober', travel: 'Auto ~4 h ab Berlin',
     dayCost: '~80–125 €/Tag',
@@ -116,7 +129,7 @@ const locations = [
     ],
   },
   {
-    id: 'harz', rank: 10, name: 'Braunlage / Harz', region: 'DE · Harz', base: 600,
+    id: 'harz', rank: 11, name: 'Braunlage / Harz', region: 'DE · Harz', base: 600,
     character: 'Heimrunde, Trainings-Wochenende',
     season: 'April – Oktober', travel: 'Auto ~3 h ab Berlin',
     dayCost: '~95–140 €/Tag',
@@ -138,6 +151,10 @@ const steepClass = (a) => (a < 6 ? 'easy' : a < 8 ? 'mid' : 'hard');
 
 // quäldich.de-Profile pro Anstieg (Schlüssel = climb.name)
 const QD = {
+  'Vršič (ab Kranjska Gora)': 'https://www.quaeldich.de/paesse/vrsic/',
+  'Mangart (Mangrt, 2.055 m)': 'https://www.quaeldich.de/paesse/mangrt/',
+  'Predel (Passo del Predil)': 'https://www.quaeldich.de/paesse/predel-pass/',
+  'Wurzenpass (Korensko sedlo)': 'https://www.quaeldich.de/paesse/wurzenpass/',
   'Stilfser Joch': 'https://www.quaeldich.de/paesse/stilfser-joch/',
   'Passo di Gavia': 'https://www.quaeldich.de/paesse/passo-di-gavia/',
   'Mortirolo': 'https://www.quaeldich.de/paesse/passo-del-mortirolo/',
@@ -575,6 +592,7 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
       { name: 'Briançon',              hm: 1490, steep: 13, alt: 2744, fame: 8,  travelh: 11.5,  daycost: 133, travelcost: 355 },
       { name: 'Corvara / Alta Badia',  hm: 920,  steep: 14, alt: 2244, fame: 9,  travelh: 9,  daycost: 168, travelcost: 245 },
       { name: 'Sölden / Ötztal',       hm: 1760, steep: 18, alt: 2474, fame: 7,  travelh: 8.5,  daycost: 158, travelcost: 200 },
+      { name: 'Kranjska Gora',          hm: 960,  steep: 18, alt: 2055, fame: 7,  travelh: 9.5,  daycost: 117, travelcost: 250 },
       { name: 'Mallorca / Tramuntana', hm: 800,  steep: 12, alt: 880,  fame: 8,  travelh: 6,  daycost: 135, travelcost: 220 },
       { name: 'La Palma',              hm: 2426, steep: 12, alt: 2426, fame: 6,  travelh: 10,  daycost: 115, travelcost: 280 },
       { name: 'Girona',                hm: 900,  steep: 15, alt: 1100, fame: 8,  travelh: 6.5,  daycost: 145, travelcost: 200 },
