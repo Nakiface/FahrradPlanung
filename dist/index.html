@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rennrad-Basislager Europa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <style>
     :root {
       --ink: #16212e; --muted: #5d6e7e; --line: #e4eaf0; --bg: #f5f8fb;
@@ -51,6 +52,11 @@
     .menu-item.active .rk { opacity: .85; }
     .burger { font-size: 15px; line-height: 1; margin-right: 2px; }
     #det-label { opacity: .9; font-weight: 600; }
+    .mapwrap, .allmap { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .gmap { width: 100%; height: 340px; border: 0; display: block; }
+    .allmap { height: 380px; }
+    .maphint { font-size: 12px; color: var(--muted); margin: 8px 2px 0; }
+    .maphint a { color: var(--accent2); }
     .navbtn {
       flex: 0 0 auto; background: transparent; color: var(--nav-ink);
       border: 1px solid #2a3f52; border-radius: 999px; padding: 6px 13px;
@@ -195,6 +201,10 @@
         <div class="region">Jeder kommt, wann und so lange er mag</div>
         <p class="tagline">Wir beziehen gemeinsam <b>eine feste Basis</b> – und von dort macht jeder, worauf er Lust hat: <b>allein, in wechselnden Gruppen oder alle zusammen</b>. Ob lange Bergetappe, gemütliche Runde, ein gemeinsamer Ausflug oder etwas ganz anderes – tagsüber so flexibel, wie es jedem passt. <b>Abends trifft man sich wieder</b> an der Basis für gemeinsames Essen und gesellige Stunden. Geplant sind <b>maximal sieben Tage</b>; kürzere Aufenthalte und spätere Anreise gehen genauso. Unten die möglichen Basislager zur Auswahl.</p>
       </div>
+
+      <div class="sec-title">Karte – alle Orte</div>
+      <div id="allmap" class="allmap"></div>
+      <div class="maphint">Pin anklicken öffnet „Details ansehen". <a href="https://www.google.com/maps/@44.0,8.0,5z" target="_blank" rel="noopener">In Google Maps öffnen ↗</a></div>
 
       <div class="sec-title">Ranking</div>
       <table class="rank">
@@ -372,6 +382,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/umbrailpass/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Bormio%2C%20Italia&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-bourg">
         <div class="hero">
           <span class="rank-badge">Rang 2 · Herz der Tour de France</span>
@@ -439,6 +452,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/col-du-sabot/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Le%20Bourg-d'Oisans%2C%20France&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-briancon">
         <div class="hero">
           <span class="rank-badge">Rang 3 · Höchste Stadt Europas – ruhiger</span>
@@ -494,6 +510,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/col-de-granon/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Brian%C3%A7on%2C%20France&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-corvara">
         <div class="hero">
           <span class="rank-badge">Rang 4 · Landschaftlich konkurrenzlos</span>
@@ -585,6 +604,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/passo-campolongo/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Corvara%20in%20Badia%2C%20Italia&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-soelden">
         <div class="hero">
           <span class="rank-badge">Rang 5 · Ötztaler-Radmarathon-Terrain</span>
@@ -640,6 +662,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/jaufenpass/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=S%C3%B6lden%2C%20%C3%96sterreich&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-kranjska">
         <div class="hero">
           <span class="rank-badge">Rang 6 · Vršič &amp; Mangart – hochalpin, Triglav-Nationalpark</span>
@@ -707,6 +732,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/wurzenpass/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Kranjska%20Gora%2C%20Slovenija&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-mallorca">
         <div class="hero">
           <span class="rank-badge">Rang 7 · Lange gleichmäßige Anstiege, mild</span>
@@ -762,6 +790,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/coll-de-soller/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Port%20de%20Pollen%C3%A7a%2C%20Mallorca&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-lapalma">
         <div class="hero">
           <span class="rank-badge">Rang 8 · Längster Anstieg am Stück – heftige Rampe</span>
@@ -793,6 +824,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/roque-de-los-muchachos/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=La%20Palma%2C%20Canarias&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-girona">
         <div class="hero">
           <span class="rank-badge">Rang 9 · Profi-Hotspot, mediterran, vielseitig</span>
@@ -848,6 +882,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/santuari-de-la-mare-de-deu-dels-angels/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Girona%2C%20Espa%C3%B1a&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-spindleruv">
         <div class="hero">
           <span class="rank-badge">Rang 10 · Mittelgebirgs-Rampen, schnell ab Berlin</span>
@@ -879,6 +916,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/spindlerpass/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=%C5%A0pindler%C5%AFv%20Ml%C3%BDn%2C%20%C4%8Cesko&z=9&hl=de&output=embed"></iframe></div>
       </section><section class="loc-section" id="sec-harz">
         <div class="hero">
           <span class="rank-badge">Rang 11 · Heimrunde, Trainings-Wochenende</span>
@@ -946,6 +986,9 @@
                 <a class="qd" href="https://www.quaeldich.de/paesse/sonnenberg-harz/" target="_blank" rel="noopener">Profil auf quäldich ↗</a>
               </div>
         </div>
+
+        <div class="sec-title">Karte</div>
+        <div class="mapwrap"><iframe class="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Braunlage%2C%20Harz%2C%20Deutschland&z=9&hl=de&output=embed"></iframe></div>
       </section>
   </main>
 
@@ -1030,6 +1073,35 @@
     });
     renderChart('hm');
 
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var el = document.getElementById('allmap');
+      if (!el || typeof L === 'undefined') return;
+      var PINS = [
+        { id: 'bormio', name: '1 · Bormio', lat: 46.467, lng: 10.373 },
+        { id: 'bourg', name: "2 · Bourg-d'Oisans", lat: 45.054, lng: 6.030 },
+        { id: 'briancon', name: '3 · Briançon', lat: 44.899, lng: 6.635 },
+        { id: 'corvara', name: '4 · Corvara / Alta Badia', lat: 46.551, lng: 11.873 },
+        { id: 'soelden', name: '5 · Sölden / Ötztal', lat: 46.967, lng: 11.007 },
+        { id: 'kranjska', name: '6 · Kranjska Gora', lat: 46.485, lng: 13.788 },
+        { id: 'mallorca', name: '7 · Mallorca / Tramuntana', lat: 39.876, lng: 3.013 },
+        { id: 'lapalma', name: '8 · La Palma', lat: 28.68, lng: -17.86 },
+        { id: 'girona', name: '9 · Girona', lat: 41.979, lng: 2.821 },
+        { id: 'spindleruv', name: '10 · Špindlerův Mlýn', lat: 50.726, lng: 15.609 },
+        { id: 'harz', name: '11 · Braunlage / Harz', lat: 51.726, lng: 10.611 }
+      ];
+      var map = L.map('allmap', { scrollWheelZoom: false }).setView([45, 7], 4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '© OpenStreetMap' }).addTo(map);
+      var pts = [];
+      PINS.forEach(function (p) {
+        var m = L.circleMarker([p.lat, p.lng], { radius: 8, color: '#ffffff', weight: 2, fillColor: '#e8590c', fillOpacity: 1 }).addTo(map);
+        m.bindPopup('<b>' + p.name + '</b><br><a href="#" onclick="selectRegion(\'' + p.id + '\');return false;">Details ansehen →</a>');
+        pts.push([p.lat, p.lng]);
+      });
+      try { map.fitBounds(pts, { padding: [30, 30] }); } catch (e) {}
+    })();
   </script>
 </body>
 </html>
