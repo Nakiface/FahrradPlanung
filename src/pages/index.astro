@@ -369,6 +369,11 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
     .hero h2 { margin: 0 0 4px; font-size: 30px; letter-spacing: -.5px; }
     .hero .region { font-size: 14px; opacity: .9; margin-bottom: 14px; }
     .hero .tagline { font-size: 15px; max-width: 660px; opacity: .96; position: relative; z-index: 1; }
+    .invite { background: linear-gradient(135deg, #ffffff, #fff6ee); border: 1px solid #f3d9c2; border-left: 5px solid var(--accent); border-radius: 16px; padding: 22px 24px; margin-bottom: 18px; box-shadow: var(--shadow); }
+    .invite-badge { display: inline-block; background: var(--accent); color: #fff; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; border-radius: 999px; padding: 4px 13px; margin-bottom: 11px; }
+    .invite h2 { margin: 0 0 9px; font-size: 24px; letter-spacing: -.3px; }
+    .invite p { margin: 0 0 10px; font-size: 15px; color: #34495a; max-width: 730px; }
+    .invite p:last-child { margin-bottom: 0; }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; position: relative; z-index: 1; }
     .chip {
       background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
@@ -459,6 +464,13 @@ const peakHm = Math.max(...maxHm.map((m) => m.hm));
   <main>
     <!-- Übersicht -->
     <section class="loc-section active" id="sec-overview">
+      <div class="invite">
+        <div class="invite-badge">🎉 Geschenk zu Leos 40.</div>
+        <h2>Leos Geburtstags-Radwoche</h2>
+        <p>Die Idee: Wir beziehen gemeinsam <b>eine feste Basis</b> – und von dort macht jeder, worauf er Lust hat. Ob lange Bergetappe, gemütliche Runde oder ein ganz anderer Ausflug: Tagsüber zieht jeder sein eigenes Ding durch.</p>
+        <p><b>Abends trifft man sich wieder</b> an der Basis – für gemeinsames Essen und gesellige Stunden. So hat jeder seine Freiheit und wir trotzdem die Zeit zusammen.</p>
+        <p>Geplant sind <b>maximal sieben Tage</b>. Wer mag, ist die ganze Woche dabei – <b>kürzere Aufenthalte und spätere Anreise gehen genauso</b>. Unten findest du die möglichen Basislager mit Touren, Höhenprofilen und allem Drumherum.</p>
+      </div>
       <div class="hero" style="background: linear-gradient(135deg,#1a2f3d 0%,#e8590c 120%);">
         <span class="rank-badge">10 Basislager · Stand Juni 2026</span>
         <h2>Höhenmeter-Reviere für Endurance-Touren</h2>
